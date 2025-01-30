@@ -1,5 +1,8 @@
+import { ollamaService } from "../server";
 import { InternalData, MatchResult } from "../types";
 import { MatchType } from "../types";
+import { logger } from "../utils/logger";
+import { extractObjectFromString } from "../utils/stringFormat";
 
 
 class TextProcessor {
@@ -28,17 +31,28 @@ class TextProcessor {
         });
     }
 
-    // private async findSemanticMatches(question: string): Promise<MatchResult[]> {
-    //     const analysisPrompt = `Analyzing this question ${question} 
-    //     to see if there are any semantic matches to this dataset:
-    //     ${this.internalData.map((data, index) => `[${index}] - content: ${data.content}`).join('\n')}`;
-    //     try {
-    //         const response = await fetch('http://localhost:5000/analyze', {
-    //     } catch (error) {
-            
-    //     }
+    private async findSemanticMatches(question: string): Promise<any> {
+        const analysisPrompt = `Please find relevant object from this data: ${this.internalData}
+        For this question: 'My wife is now 50 years old, what type of medicine she should take?'.
+        Please answer following this format: 
+        ***{
+            relevant: {
+                'isMatch': boolean, 
+                'matchContent': {
+                    <return matched object, if none return null>
+                }
+            }
+        }***`;
+        try {
+            const response = await ollamaService.chat([{ role: 'user', content: analysisPrompt }]);
+            const matchResult = await extractObjectFromString(response);
+            const matchContent = await matchResult.relevant.isMatch ? await matchResult.relevant.matchContent : null;
+            return await matchContent;
+        } catch (error) {
+            logger.error('Failed to find semantic matches:', error);
+        }
 
-    // }
+    }
 
 
 }

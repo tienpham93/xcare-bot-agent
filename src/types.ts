@@ -19,13 +19,19 @@ export interface ModelConfig {
     };
 }
 
-export interface OllamaRequest {
+export interface OllamaChatRequest {
     model: string;
     messages: ChatMessage[];
     stream?: boolean;
     temperature: number;
     top_p: number;
     num_predict: number;
+}
+
+export interface OllamaGenerateRequest {
+    model: string;
+    stream?: boolean;
+    prompt: string;
 }
 
 export interface OllamaResponse {

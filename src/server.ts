@@ -23,5 +23,5 @@ app.use(express.json());
 app.use(router);
 app.listen(expressPort, () => {    
     logger.info(`Express is running at http://localhost:${expressPort}`);
-    logger.info(`Ollama service is running at http://localhost:${ollamaPort}`);
+    logger.info(`Model ${ollamaService.modelConfig.name} is running at http://localhost:${ollamaPort}`);
 });

@@ -1,11 +1,12 @@
-import { ChatMessage, ModelConfig, OllamaRequest } from "./types";
+import { ChatMessage, ModelConfig, OllamaChatRequest } from "./types";
 import { defautModelConfig, isValidModel } from "./config/modelConfig";
 import { logger } from "./utils/logger";
 import { exec } from "child_process";
+import { OllamaGenerateRequest } from "./types";
 
 export class OllamaService {
     private baseUrl: string;
-    private modelConfig: ModelConfig;
+    public modelConfig: ModelConfig;
 
     constructor(host: string = 'http://127.0.0.1:11434') {
         this.baseUrl = host;
@@ -25,7 +26,7 @@ export class OllamaService {
 
     async chat(messages: ChatMessage[]): Promise<any> {
         try {
-            const requestBody: OllamaRequest = {   
+            const requestBody: OllamaChatRequest = {   
                 model: this.modelConfig.name,
                 messages,
                 ...this.modelConfig.parameters
@@ -59,6 +60,32 @@ export class OllamaService {
             const fullText = parsedObjects.reduce((acc, obj) => acc + obj.message.content, '');
 
             return fullText;
+        } catch (error) {
+            logger.error('Error when processing the response', error);
+        }
+    }
+
+    async generate(prompt: string): Promise<any> {
+        try {
+            const requestBody: OllamaGenerateRequest = {   
+                model: this.modelConfig.name,
+                stream: false,
+                prompt: prompt
+            };
+
+            const response = await fetch(`${this.baseUrl}/api/generate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to response with: ${response.statusText}`);
+            }
+            const data = await response.json();
+            return data;
         } catch (error) {
             logger.error('Error when processing the response', error);
         }

@@ -1,11 +1,11 @@
 import { ModelConfig } from "../types";
 
 
-export const availableModels = ['llama2', 'llama3.2'] as const;
+export const availableModels = ['llama3.2', 'llama3.1', 'deepseek-r1'] as const;
 export type AvailableModel = typeof availableModels[number];
 
 export const defautModelConfig: ModelConfig = {
-    name: 'llama3.2',
+    name: 'llama3.1',
     parameters: {
         temperature: 0.7,
         top_p: 0.9,
