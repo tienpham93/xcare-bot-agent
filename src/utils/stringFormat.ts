@@ -1,9 +1,8 @@
 
 
 
-export const extractObjectFromString = (input: string): any => {
-    const regex = /\*\*\*(.*?)\*\*\*/s;
-    const match = input.match(regex);
+export const extractSubString = (string: string, regex: RegExp): any => {
+    const match = string.match(regex);
     if (match && match[1]) {
         const jsonString = match[1]
             .replace(/True/g, 'true')

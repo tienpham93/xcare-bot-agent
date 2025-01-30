@@ -2,8 +2,7 @@ import { ollamaService } from "../server";
 import { InternalData, MatchResult } from "../types";
 import { MatchType } from "../types";
 import { logger } from "../utils/logger";
-import { extractObjectFromString } from "../utils/stringFormat";
-
+import { extractSubString } from "../utils/stringFormat";
 
 class TextProcessor {
     private internalData: InternalData[];
@@ -43,9 +42,10 @@ class TextProcessor {
                 }
             }
         }***`;
+        
         try {
             const response = await ollamaService.chat([{ role: 'user', content: analysisPrompt }]);
-            const matchResult = await extractObjectFromString(response);
+            const matchResult = await extractSubString(response, /\*\*\*(.*?)\*\*\*/s);
             const matchContent = await matchResult.relevant.isMatch ? await matchResult.relevant.matchContent : null;
             return await matchContent;
         } catch (error) {
