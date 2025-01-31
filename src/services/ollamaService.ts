@@ -1,14 +1,14 @@
-import { ChatMessage, ModelConfig, OllamaChatRequest } from "./types";
-import { defautModelConfig, isValidModel } from "./config/modelConfig";
-import { logger } from "./utils/logger";
+import { ChatMessage, ModelConfig, OllamaChatRequest } from "../types";
+import { defautModelConfig, isValidModel } from "../config/modelConfig";
+import { logger } from "../utils/logger";
 import { exec } from "child_process";
-import { OllamaGenerateRequest } from "./types";
+import { OllamaGenerateRequest } from "../types";
 
 export class OllamaService {
-    private baseUrl: string;
+    public baseUrl: string;
     public modelConfig: ModelConfig;
 
-    constructor(host: string = 'http://127.0.0.1:11434') {
+    constructor(host: string) {
         this.baseUrl = host;
         this.modelConfig = defautModelConfig;
     }
@@ -62,6 +62,7 @@ export class OllamaService {
             return fullText;
         } catch (error) {
             logger.error('Error when processing the response', error);
+            throw error;
         }
     }
 
@@ -88,6 +89,7 @@ export class OllamaService {
             return data;
         } catch (error) {
             logger.error('Error when processing the response', error);
+            throw error;
         }
     }
 

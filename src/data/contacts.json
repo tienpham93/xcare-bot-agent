@@ -1,0 +1,29 @@
+[
+    {
+        "id": "001",
+        "conditions": {
+            "level": "critical",
+            "status": "unconscious",
+            "causes": ["car_accident", "heart_attack", "fall"]
+        },
+        "contact_number": "115"
+    },
+    {
+        "id": "002",
+        "conditions": {
+            "level": "medium",
+            "status": "conscious",
+            "causes": ["fire_burn", "bone_fracture", "allergic_reaction"]
+        },
+        "contact_number": "116"
+    },
+    {
+        "id": "003",
+        "conditions": {
+            "level": "low",
+            "status": "conscious",
+            "causes": ["headache", "toothache", "stomachache"]
+        },
+        "contact_number": "117"
+    }
+]

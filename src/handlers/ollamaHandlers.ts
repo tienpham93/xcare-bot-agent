@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
-import { ollamaService } from '../server';
+import { ollamaService, vectorDB } from '../server';
+import { medicalTypePrompt } from '../prompts/healthCare';
 
 // Initialize conversation history
 const conversations: Map<string, any> = new Map();
@@ -51,6 +52,7 @@ export const postGenerateHandler = async (
     res: Response
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
+    const relevantInternalData = await vectorDB.getRelevantContext(prompt);
     try {
         if (model) {
             ollamaService.setModel(model);
@@ -61,9 +63,12 @@ export const postGenerateHandler = async (
         }
 
         const conversation = conversations.get(conversationId)!;
-        conversation.push({ role: 'user', content: prompt });
+        const inputContent = relevantInternalData 
+            ? medicalTypePrompt(prompt, relevantInternalData)
+            : prompt;
+        conversation.push({ role: 'user', content: inputContent });
 
-        const generatedResponse = await ollamaService.generate(prompt);
+        const generatedResponse = await ollamaService.generate(inputContent);
         let botResponse: OllamaResponse = {
             model: model,
             message: {
