@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
-import { ollamaService, internalDataStore, promptStore } from '../server';
+import { ollamaService, internalDataStore, answerStore } from '../server';
 
 // Initialize conversation history
 const conversations: Map<string, any> = new Map();
@@ -52,7 +52,7 @@ export const postGenerateHandler = async (
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
     const relevantInternalData = await internalDataStore.getRelevantContext(prompt);
-    const answerFormat = await promptStore.getRelevantContext(prompt);
+    const answerRule = await answerStore.getRelevantContext(prompt);
     try {
         if (model) {
             ollamaService.setModel(model);
@@ -66,9 +66,9 @@ export const postGenerateHandler = async (
 
         const inputContent = relevantInternalData 
             ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
-            Based on these answer format: ${answerFormat ? answerFormat?.replace(/\r\n/g, '') : 'No relevant answer format'}
+            Based on these answer rules: ${answerRule ? answerRule?.replace(/\r\n/g, '') : 'No relevant rules'}
             Please answer the user's question: ${prompt} with this format: 
-            ***{'isInternalData': true, 'isFormatAnswer': ${answerFormat ? true : false}, 'answer': <the formatted answer>}***`
+            ***{'isInternalData': true, 'isFormatAnswer': ${answerRule ? true : false}, 'answer': <the answer based on internal data and answer rules>}***`
             : `Please answer the user's question: ${prompt}
             With this format: ***{'isInternalData':false, 'isFormatAnswer': false, 'answer':<No relevant data so please answer based on your knowledges>}***`;
         conversation.push({ role: 'user', content: inputContent });

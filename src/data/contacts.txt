@@ -1,4 +1,4 @@
 [call 115 when Patients is in critical status such as unconscious, car accident, heart attack...etc]
 [call 116 when Patients is in low status such as headache, toothache, stomachache...etc]
 [email guilde@hotmail.com when user would like to know more about guildelines, locations, available services, bills...etc]
-[email feedback@hotmail.com when user would like to give feedback about bad service, unfriendly staff, long wait...etc]
+[email feedback@hotmail.com when user would like to give feedback about bad services, unfriendly staff, long wait...etc]

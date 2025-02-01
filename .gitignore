@@ -21,4 +21,4 @@
 Thumbs.db
 faiss_store
 internalData_store
-prompts_store
+answer_store

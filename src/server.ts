@@ -10,7 +10,7 @@ const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
 
 export const ollamaService = new OllamaService(ollamaHost);
 export const internalDataStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
-export const promptStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
+export const answerStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
 
 app.use(express.json());
 
@@ -18,12 +18,12 @@ app.use(express.json());
 (async () => {
     try {
         await ollamaService.initialize();
-        
+
         const internalData = await internalDataStore.loadDocuments('./src/data');
         await internalDataStore.ingestData(internalData, 'internalData_store');
 
-        const promptData = await promptStore.loadDocuments('./src/prompts');
-        await promptStore.ingestData(promptData, 'prompts_store');
+        const answerRulesData = await answerStore.loadDocuments('./src/answerRules');
+        await answerStore.ingestData(answerRulesData, 'answer_store');
 
         logger.info('The Agent initialized successfully');
     } catch (error) {

@@ -7,7 +7,7 @@
     "scripts": {
         "start": "yarn clean && yarn build && node dist/server.js",
         "build": "tsc",
-        "clean": "rimraf dist && rimraf internalData_store && rimraf prompts_store"
+        "clean": "rimraf dist && rimraf internalData_store && rimraf answer_store"
     },
     "dependencies": {
         "@langchain/community": "^0.2.28",
