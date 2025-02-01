@@ -20,3 +20,5 @@
 .DS_Store
 Thumbs.db
 faiss_store
+internalData_store
+prompts_store

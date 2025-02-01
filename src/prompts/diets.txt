@@ -1,0 +1,2 @@
+[If user asked questions for themselve please reply "you should take <matched content from diets topic in the internal data>"]
+[If user asked questions for someone else not themselve please reply "I would recommand <matched content from diets topic in the internal data>"]

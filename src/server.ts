@@ -2,15 +2,15 @@ import { OllamaService } from './services/ollamaService';
 import { logger } from './utils/logger';
 import express from 'express';
 import router from './router';
-import { ollamaPort, expressPort } from './env';
-import { VectorDB } from './services/vectorDB';
+import { ollamaPort, expressPort } from './constants/env';
+import { VectorStore } from './services/vectorStore';
 
 const app = express();
 const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
-const vectorDBpath = `./faiss_store`;
 
 export const ollamaService = new OllamaService(ollamaHost);
-export const vectorDB = new VectorDB(ollamaService.modelConfig.name, ollamaService.baseUrl);
+export const internalDataStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
+export const promptStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
 
 app.use(express.json());
 
@@ -18,8 +18,12 @@ app.use(express.json());
 (async () => {
     try {
         await ollamaService.initialize();
-        const internalData = await vectorDB.loadDocuments('./src/data');
-        await vectorDB.ingestData(internalData);
+        const internalData = await internalDataStore.loadDocuments('./src/data');
+        await internalDataStore.ingestData(internalData, 'internalData_store');
+
+        const promptData = await promptStore.loadDocuments('./src/prompts');
+        await promptStore.ingestData(promptData, 'prompts_store');
+
         logger.info('The Agent initialized successfully');
     } catch (error) {
         logger.error('Failed to initialize the Agent:', error);
@@ -31,5 +35,4 @@ app.use(router);
 app.listen(expressPort, () => {    
     logger.info(`Express is running at http://localhost:${expressPort}`);
     logger.info(`Model ${ollamaService.modelConfig.name} is running at http://localhost:${ollamaPort}`);
-    logger.info(`Vector DB is ${vectorDBpath}`);
 });

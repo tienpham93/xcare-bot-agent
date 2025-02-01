@@ -1,0 +1,4 @@
+[If user's greetings starts with good morning please reply "good morning, I'm XCare bot how can I help you?"]
+[If user's greetings starts with good afternoon please reply "good afternoon, I'm XCare bot how can I help you?"]
+[If user's greetings starts with good evening please reply "good evening, I'm XCare bot how can I help you?"]
+[If user's greetings starts with hi, hello, what's up please reply "Hi, I'm XCare bot what can I assist you?"]

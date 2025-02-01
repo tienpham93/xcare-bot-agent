@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
-import { ollamaService, vectorDB } from '../server';
-import { medicalTypePrompt } from '../prompts/healthCare';
+import { ollamaService, internalDataStore, promptStore } from '../server';
 
 // Initialize conversation history
 const conversations: Map<string, any> = new Map();
@@ -52,7 +51,8 @@ export const postGenerateHandler = async (
     res: Response
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
-    const relevantInternalData = await vectorDB.getRelevantContext(prompt);
+    const relevantInternalData = await internalDataStore.getRelevantContext(prompt, 5);
+    const answerFormat = await promptStore.getRelevantContext(prompt, 5);
     try {
         if (model) {
             ollamaService.setModel(model);
@@ -63,9 +63,14 @@ export const postGenerateHandler = async (
         }
 
         const conversation = conversations.get(conversationId)!;
+
         const inputContent = relevantInternalData 
-            ? medicalTypePrompt(prompt, relevantInternalData)
-            : prompt;
+            ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
+            Based on these answer format: ${answerFormat.replace(/\r\n/g, '')}
+            Please answer the user's question: ${prompt} with this format: 
+            ***{'isInternalData': true, 'isFormatAnswer': ${answerFormat ? true : false}, 'answer': <the formatted answer>}***`
+            : `Please answer the user's question: ${prompt}
+            With this format: ***{'isInternalData':false, 'isFormatAnswer': false, 'answer':<No relevant data so please answer based on your knowledges>}***`;
         conversation.push({ role: 'user', content: inputContent });
 
         const generatedResponse = await ollamaService.generate(inputContent);
