@@ -66,12 +66,12 @@ export class VectorStore {
         }
 
         const context = await this.vectorStore.similaritySearch(query, k);
-        const queryTopic = await this.detectQueryTopic(query);
-        if (queryTopic) {
-            const matchedContext = context.filter(doc => doc.metadata.topic === queryTopic);
+        const detectedTopic = await this.detectQueryTopic(query);
+        if (detectedTopic) {
+            const matchedContext = context.filter(doc => doc.metadata.topic === detectedTopic);
             return matchedContext.map(doc => doc.pageContent).join('\n');
         }
-        return context.map(doc => doc.pageContent).join('\n');
+        return null;
     }
 
 }

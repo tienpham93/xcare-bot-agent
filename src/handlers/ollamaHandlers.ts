@@ -51,8 +51,8 @@ export const postGenerateHandler = async (
     res: Response
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
-    const relevantInternalData = await internalDataStore.getRelevantContext(prompt, 5);
-    const answerFormat = await promptStore.getRelevantContext(prompt, 5);
+    const relevantInternalData = await internalDataStore.getRelevantContext(prompt);
+    const answerFormat = await promptStore.getRelevantContext(prompt);
     try {
         if (model) {
             ollamaService.setModel(model);
@@ -66,7 +66,7 @@ export const postGenerateHandler = async (
 
         const inputContent = relevantInternalData 
             ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
-            Based on these answer format: ${answerFormat.replace(/\r\n/g, '')}
+            Based on these answer format: ${answerFormat ? answerFormat?.replace(/\r\n/g, '') : 'No relevant answer format'}
             Please answer the user's question: ${prompt} with this format: 
             ***{'isInternalData': true, 'isFormatAnswer': ${answerFormat ? true : false}, 'answer': <the formatted answer>}***`
             : `Please answer the user's question: ${prompt}
