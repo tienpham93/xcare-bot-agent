@@ -18,6 +18,7 @@ app.use(express.json());
 (async () => {
     try {
         await ollamaService.initialize();
+        
         const internalData = await internalDataStore.loadDocuments('./src/data');
         await internalDataStore.ingestData(internalData, 'internalData_store');
 
