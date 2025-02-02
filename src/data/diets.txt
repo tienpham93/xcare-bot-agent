@@ -1,4 +1,4 @@
-[Obesity Patients should aim for no more than 200 milligrams (mg) of cholesterol a day]
-[Diabetes Patients should avoid high-fat dairy products and high sugary foods]
-[Gout Patients should Avoid red meats such as beef, seafood, and animal proteins which contribute to high blood levels of uric acid]
-[Patients have multiple disease should Avoid alcohol and consider to be vegetarian]
+[diets topic: Obesity Patients should aim for no more than 200 milligrams (mg) of cholesterol a day]
+[diets topic: Diabetes Patients should avoid high-fat dairy products and high sugary foods]
+[diets topic: Gout Patients should Avoid red meats such as beef, seafood, and animal proteins which contribute to high blood levels of uric acid]
+[diets topic: Patients have multiple disease should Avoid alcohol and consider to be vegetarian]

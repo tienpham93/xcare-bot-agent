@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
-import { ollamaService, internalDataStore, answerStore } from '../server';
+import { ollamaService, answerRulesNLP, internalDataNLP } from '../server';
 
 // Initialize conversation history
 const conversations: Map<string, any> = new Map();
@@ -51,8 +51,10 @@ export const postGenerateHandler = async (
     res: Response
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
-    const relevantInternalData = await internalDataStore.getRelevantContext(prompt);
-    const answerRule = await answerStore.getRelevantContext(prompt);
+
+    const relevantInternalData = await internalDataNLP.search(prompt);
+    const answerRules = await answerRulesNLP.search(relevantInternalData);
+
     try {
         if (model) {
             ollamaService.setModel(model);
@@ -63,14 +65,14 @@ export const postGenerateHandler = async (
         }
 
         const conversation = conversations.get(conversationId)!;
-
+        
         const inputContent = relevantInternalData 
             ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
-            Based on these answer rules: ${answerRule ? answerRule?.replace(/\r\n/g, '') : 'No relevant rules'}
-            Please answer the user's question: ${prompt} with this format: 
-            ***{'isInternalData': true, 'isFormatAnswer': ${answerRule ? true : false}, 'answer': <the answer based on internal data and answer rules>}***`
+            and these answer rules: ${answerRules ? answerRules?.replace(/\r\n/g, '') : 'No relevant rules'}
+            Please answer the question: ${prompt} with this format: 
+            ***{'isInternalData': true, 'isAnswerRules': ${answerRules ? true : false}, 'answer': <answer based on internal data and answer rules>}***`
             : `Please answer the user's question: ${prompt}
-            With this format: ***{'isInternalData':false, 'isFormatAnswer': false, 'answer':<No relevant data so please answer based on your knowledges>}***`;
+            With this format: ***{'isInternalData':false, 'isAnswerRules': false, 'answer':<answer based on your knowledges>}***`;
         conversation.push({ role: 'user', content: inputContent });
 
         const generatedResponse = await ollamaService.generate(inputContent);

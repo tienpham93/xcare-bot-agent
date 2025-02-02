@@ -1,3 +1,3 @@
-[If call 115 add this text to the reply "This urgent case we've picked an ambulant for you"]
-[If call 116 add this text to the reply "This is mild symptoms, but you can go to nearby health centre for checkup"]
-[If email guilde@hotmail.com and feedback@hotmail.com add this text to the reply "Please note that the email will be processed within 3 working days"]
+[contacts topic: critical symptoms add this text to the reply "This urgent case we've picked an ambulant for you"]
+[contacts topic: low symptoms add this text to the reply "This is mild symptoms, but you can go to nearby health centre for checkup"]
+[contacts topic: email guilde@hotmail.com and feedback@hotmail.com add this text to the reply "Please note that the email will be processed within 3 working days"]

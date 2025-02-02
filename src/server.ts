@@ -3,14 +3,14 @@ import { logger } from './utils/logger';
 import express from 'express';
 import router from './router';
 import { ollamaPort, expressPort } from './constants/env';
-import { VectorStore } from './services/vectorStore';
+import { NLPSearchEngine } from './services/NLPService';
 
 const app = express();
 const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
 
 export const ollamaService = new OllamaService(ollamaHost);
-export const internalDataStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
-export const answerStore = new VectorStore(ollamaService.modelConfig.name, ollamaService.baseUrl);
+export const internalDataNLP = new NLPSearchEngine();
+export const answerRulesNLP = new NLPSearchEngine();
 
 app.use(express.json());
 
@@ -19,11 +19,11 @@ app.use(express.json());
     try {
         await ollamaService.initialize();
 
-        const internalData = await internalDataStore.loadDocuments('./src/data');
-        await internalDataStore.ingestData(internalData, 'internalData_store');
+        const internalData = await internalDataNLP.loadDocuments('./src/data');
+        await internalDataNLP.ingestDocuments(internalData);
 
-        const answerRulesData = await answerStore.loadDocuments('./src/answerRules');
-        await answerStore.ingestData(answerRulesData, 'answer_store');
+        const answerRules = await answerRulesNLP.loadDocuments('./src/answerRules');
+        await answerRulesNLP.ingestDocuments(answerRules);
 
         logger.info('The Agent initialized successfully');
     } catch (error) {
