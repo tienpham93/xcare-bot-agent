@@ -9,8 +9,7 @@ const app = express();
 const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
 
 export const ollamaService = new OllamaService(ollamaHost);
-export const internalDataNLP = new NLPSearchEngine();
-export const answerRulesNLP = new NLPSearchEngine();
+export const nlpInstance = new NLPSearchEngine();
 
 app.use(express.json());
 
@@ -19,11 +18,8 @@ app.use(express.json());
     try {
         await ollamaService.initialize();
 
-        const internalData = await internalDataNLP.loadDocuments('./src/data');
-        await internalDataNLP.ingestDocuments(internalData);
-
-        const answerRules = await answerRulesNLP.loadDocuments('./src/answerRules');
-        await answerRulesNLP.ingestDocuments(answerRules);
+        const data = await nlpInstance.loadDocuments('./src/data');
+        await nlpInstance.ingestDocuments(data);
 
         logger.info('The Agent initialized successfully');
     } catch (error) {

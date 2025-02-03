@@ -1,0 +1,4 @@
+[incident knowledges: low incidents are breaking symptom, headache, runny nose, fever, toothache, cough, allergy]
+[incident knowledges: critical incidents are unconscious, bone broken, body paralyzed, food poisoning, heart attack, stomachache]
+[incident knowledges: low incidents are commonly occurred when whether or seasonal changes, make sure you drink enough water, sleep well, perhaps provide a little vitamin C for faster recovery]
+[incident knowledges: critical incidents will have likelihood of internal damages, I would recommand you to connect our online doctors]

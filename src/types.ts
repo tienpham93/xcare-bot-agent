@@ -40,7 +40,12 @@ export interface OllamaResponse {
         role: string;
         content: string;
     };
-    done: boolean;
+    metadata?: {
+        topic: string | null;
+        isInternalKnowledges: boolean;
+        isAnswerRules: boolean;
+    };
+    done?: boolean;
 }
 
 export enum MatchType {
@@ -58,4 +63,10 @@ export interface MatchResult {
     data: InternalData;
     score: number;
     matchType: MatchType;
+}
+
+export interface DataSources {
+    knowledges: string;
+    answerRules?: string;
+    options?: string;
 }
