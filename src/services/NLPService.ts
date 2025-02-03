@@ -12,6 +12,7 @@ export class NLPSearchEngine {
     private tokenizer: natural.WordTokenizer;
     private stemmer: natural.Stemmer;
     private classifier: natural.BayesClassifier;
+    public matchedTopic: string;
 
     constructor() {
         this.tfidf = new natural.TfIdf();
@@ -19,6 +20,7 @@ export class NLPSearchEngine {
         this.stemmer = natural.PorterStemmer;
         this.classifier = new natural.BayesClassifier();
         this.documents = [];
+        this.matchedTopic = '';
     }
 
     private async preprocessText(text: string): Promise<string> {
@@ -101,8 +103,14 @@ export class NLPSearchEngine {
             return '';
         }
 
+        this.matchedTopic = highestResult.label;
         const matchedContent = this.documents.filter(doc => doc.metadata?.topic === highestResult.label);
         return matchedContent.map(doc => doc.pageContent).join('\n');
+    }
+
+    public async getAllPageContent(): Promise<string> {
+        const matchedContent = this.documents.map(doc => doc.pageContent);
+        return matchedContent.join('\n');
     }
 
 }

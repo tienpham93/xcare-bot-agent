@@ -40,6 +40,11 @@ export interface OllamaResponse {
         role: string;
         content: string;
     };
+    metadata?: {
+        topic: string;
+        isInternalKnowledge: boolean;
+        isAnswerRule: boolean;
+    };
     done: boolean;
 }
 

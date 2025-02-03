@@ -5,3 +5,4 @@
 [billing topic: Offline consult with doctor is from approximately $100 to $200 per visit]
 [billing topic: Offline consult with doctor is from approximately $100 to $200 per visit]
 [billing topic: Annual health checks is 400$ per person, if register for over 10 people will get discount 20% in total bill]
+[billing topic: email billing@hotmail.com when user would like to know more about bills, bill, invoice and receipt...etc]

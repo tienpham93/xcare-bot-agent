@@ -1,1 +1,1 @@
-[billing topic: Add this text to the answer "please provide us your email, we will send you detail price list"]
+[billing topic: If answer contains bills over $15000 add this text "please provide us your email, we will send you detail price list"]

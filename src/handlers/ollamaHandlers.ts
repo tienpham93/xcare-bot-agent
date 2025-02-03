@@ -52,8 +52,8 @@ export const postGenerateHandler = async (
 ) => {
     const { model, prompt, conversationId = 'default' } = req.body;
 
-    const relevantInternalData = await internalDataNLP.search(prompt);
-    const answerRules = await answerRulesNLP.search(relevantInternalData);
+    const relevantInternalData = await internalDataNLP.search(prompt)
+    const answerRules = await answerRulesNLP.search(relevantInternalData)
 
     try {
         if (model) {
@@ -65,14 +65,19 @@ export const postGenerateHandler = async (
         }
 
         const conversation = conversations.get(conversationId)!;
+        let metadata = {   
+            topic: internalDataNLP.matchedTopic,
+            isInternalKnowledge: relevantInternalData ? true : false,
+            isAnswerRules: answerRules ? true : false
+        };
         
         const inputContent = relevantInternalData 
             ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
             and these answer rules: ${answerRules ? answerRules?.replace(/\r\n/g, '') : 'No relevant rules'}
             Please answer the question: ${prompt} with this format: 
-            ***{'isInternalData': true, 'isAnswerRules': ${answerRules ? true : false}, 'answer': <answer based on internal data and answer rules>}***`
+            ***{'answer': <answer based on internal data and answer rules>}***`
             : `Please answer the user's question: ${prompt}
-            With this format: ***{'isInternalData':false, 'isAnswerRules': false, 'answer':<answer based on your knowledges>}***`;
+            With this format: ***{'answer':<answer based on your knowledges>}***`;
         conversation.push({ role: 'user', content: inputContent });
 
         const generatedResponse = await ollamaService.generate(inputContent);
@@ -80,13 +85,22 @@ export const postGenerateHandler = async (
             model: model,
             message: {
                 role: 'bot',
-                content: generatedResponse.response
+                content: generatedResponse.response,
+            },
+            metadata: {
+                topic: metadata.topic,
+                isInternalKnowledge: metadata.isInternalKnowledge,
+                isAnswerRule: metadata.isAnswerRules
             },
             done: true
         }
 
         if (botResponse.done) {
-            conversation.push({ role: 'bot', content: botResponse.message.content! });
+            conversation.push({ 
+                role: 'bot', 
+                content: botResponse.message.content!,
+                metadata: botResponse.metadata
+            });
             res.json({ 
                 conversationId: conversationId,
                 conversation: conversation 
