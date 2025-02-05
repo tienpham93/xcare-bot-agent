@@ -1,111 +1,45 @@
 import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
-import { ollamaService, answerRulesNLP, internalDataNLP } from '../server';
-
-// Initialize conversation history
-const conversations: Map<string, any> = new Map();
-
-export const postChatHandler = async (
-    req: Request, 
-    res: Response
-) => {
-    const { message, conversationId = 'default', model } = req.body;
-    try {
-        if (model) {
-            ollamaService.setModel(model);
-        }
-        if (!conversations.has(conversationId)) {
-            conversations.set(conversationId, []);
-        }
-
-        const conversation = conversations.get(conversationId)!;
-        conversation.push({ role: 'user', content: message });
-
-        const chatResponse = await ollamaService.chat(conversation);
-        let botResponse: OllamaResponse = {
-            model: model,
-            message: {
-                role: 'bot',
-                content: chatResponse
-            },
-            done: true
-        }
-
-        if (botResponse.done) {
-            conversation.push({ role: 'bot', content: botResponse.message.content! });
-            res.json({ 
-                conversationId: conversationId,
-                conversation: conversation 
-            });
-        }
-
-    } catch (error) {
-        logger.error('Failed to chat:', error);
-        res.status(500).json({ error: 'Failed to chat' });
-    };
-};
+import { ollamaService, stateManager } from '../server';
 
 export const postGenerateHandler = async (
-    req: Request, 
+    req: Request,
     res: Response
 ) => {
-    const { model, prompt, conversationId = 'default' } = req.body;
-
-    const relevantInternalData = await internalDataNLP.search(prompt)
-    const answerRules = await answerRulesNLP.search(relevantInternalData)
-
+    const { model, prompt, sessionId = 'greeting' } = req.body;
     try {
         if (model) {
             ollamaService.setModel(model);
         }
 
-        if (!conversations.has(conversationId)) {
-            conversations.set(conversationId, []);
-        }
+        const response = await stateManager.handleMessage(sessionId, prompt);
+        const sessionMetadata = stateManager.sessions.get(sessionId);
 
-        const conversation = conversations.get(conversationId)!;
-        let metadata = {   
-            topic: internalDataNLP.matchedTopic,
-            isInternalKnowledge: relevantInternalData ? true : false,
-            isAnswerRules: answerRules ? true : false
+        let metadata = {
+            topic: sessionMetadata?.currentState,
+            intent: sessionMetadata?.intent,
+            sessionData: sessionMetadata?.sessionData
         };
-        
-        const inputContent = relevantInternalData 
-            ? `Based on these knowledges: ${relevantInternalData.replace(/\r\n/g, '')}
-            and these answer rules: ${answerRules ? answerRules?.replace(/\r\n/g, '') : 'No relevant rules'}
-            Please answer the question: ${prompt} with this format: 
-            ***{'answer': <answer based on internal data and answer rules>}***`
-            : `Please answer the user's question: ${prompt}
-            With this format: ***{'answer':<answer based on your knowledges>}***`;
-        conversation.push({ role: 'user', content: inputContent });
 
-        const generatedResponse = await ollamaService.generate(inputContent);
         let botResponse: OllamaResponse = {
             model: model,
             message: {
                 role: 'bot',
-                content: generatedResponse.response,
+                content: response,
             },
             metadata: {
-                topic: metadata.topic,
-                isInternalKnowledge: metadata.isInternalKnowledge,
-                isAnswerRule: metadata.isAnswerRules
+                topic: metadata?.topic,
+                intent: metadata?.intent,
+                sessionData: metadata?.sessionData
             },
-            done: true
         }
 
-        if (botResponse.done) {
-            conversation.push({ 
-                role: 'bot', 
-                content: botResponse.message.content!,
-                metadata: botResponse.metadata
-            });
-            res.json({ 
-                conversationId: conversationId,
-                conversation: conversation 
-            });
-        }
+        logger.info('Bot response:', botResponse);
+        res.json({
+            sessionId: sessionId,
+            conversation: botResponse
+        });
 
     } catch (error) {
         logger.error('Failed to prompt:', error);

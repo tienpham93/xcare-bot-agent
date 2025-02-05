@@ -3,14 +3,16 @@ import { logger } from './utils/logger';
 import express from 'express';
 import router from './router';
 import { ollamaPort, expressPort } from './constants/env';
-import { NLPSearchEngine } from './services/NLPService';
+import { KnowledgeBase } from './services/RAGservice/knowledgeBase';
+import { ConversationStateManager } from './services/stateManager';
 
 const app = express();
 const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
 
 export const ollamaService = new OllamaService(ollamaHost);
-export const internalDataNLP = new NLPSearchEngine();
-export const answerRulesNLP = new NLPSearchEngine();
+
+export const knowledgeBase = KnowledgeBase.getInstance();
+export const stateManager = new ConversationStateManager(knowledgeBase);
 
 app.use(express.json());
 
@@ -18,13 +20,7 @@ app.use(express.json());
 (async () => {
     try {
         await ollamaService.initialize();
-
-        const internalData = await internalDataNLP.loadDocuments('./src/data');
-        await internalDataNLP.ingestDocuments(internalData);
-
-        const answerRules = await answerRulesNLP.loadDocuments('./src/answerRules');
-        await answerRulesNLP.ingestDocuments(answerRules);
-
+        await knowledgeBase.initializeKnowledgeBase('./src/data');
         logger.info('The Agent initialized successfully');
     } catch (error) {
         logger.error('Failed to initialize the Agent:', error);

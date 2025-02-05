@@ -1,0 +1,14 @@
+[
+    {
+        "topic": "greetings",
+        "category": "greetings",
+        "content": "Hello I am XCare uncle! How can I help you today?",
+        "metadata": {}
+    },
+    {
+        "topic": "greetings",
+        "category": "greetings",
+        "content": "Hi there! what is your health care issue?",
+        "metadata": {}
+    }
+]

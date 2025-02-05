@@ -66,12 +66,14 @@ export class OllamaService {
         }
     }
 
-    async generate(prompt: string): Promise<any> {
+    async generate(prompt: string, knowledge?: string): Promise<any> {
         try {
+            const completePrompt = `Based on this knowledge: ${knowledge ? knowledge : 'no relevant knowledge'} Please answer the question: ${prompt}`;
+
             const requestBody: OllamaGenerateRequest = {   
                 model: this.modelConfig.name,
                 stream: false,
-                prompt: prompt
+                prompt: completePrompt
             };
 
             const response = await fetch(`${this.baseUrl}/api/generate`, {
@@ -86,7 +88,7 @@ export class OllamaService {
                 throw new Error(`Failed to response with: ${response.statusText}`);
             }
             const data = await response.json();
-            return data;
+            return data.response;
         } catch (error) {
             logger.error('Error when processing the response', error);
             throw error;
