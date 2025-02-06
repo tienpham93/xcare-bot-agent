@@ -1,6 +1,6 @@
 import { logger } from '../../utils/logger';
 
-export class EmbeddingService {
+export class MinHashEmbeddingService {
     private readonly dimension: number = 384;
     private readonly numHashes: number = 384;
     private readonly prime: number = 4294967311;

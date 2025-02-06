@@ -55,10 +55,9 @@ export class VectorStore {
         try {
             // Add to Faiss index
             for (let i = 0; i < documents.length; i++) {
-                const id = this.documents.length;
                 await this.index.add(documents[i].embedding!);
                 this.documents.push(documents[i]);
-                logger.info(`Added document with ${id} to vector store`);
+                logger.info(`Added ${documents[i].topic} - ${documents[i].category} to vector store`);
             }
 
 
@@ -78,6 +77,8 @@ export class VectorStore {
 
             // Retrieve the documents
             const results: SearchResult[] = labels.map((docIndex: number, i: number) => ({
+                topic: this.documents[docIndex].topic,
+                category: this.documents[docIndex].category,
                 content: this.documents[docIndex].content,
                 similarity: 1 / (1 + distances[i]), // Convert distance to similarity score
                 metadata: this.documents[docIndex].metadata

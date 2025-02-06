@@ -1,14 +1,10 @@
 [
     {
-        "topic": "greetings",
-        "category": "greetings",
-        "content": "Hello I am XCare uncle! How can I help you today?",
-        "metadata": {}
-    },
-    {
-        "topic": "greetings",
-        "category": "greetings",
-        "content": "Hi there! what is your health care issue?",
-        "metadata": {}
+        "topic": "initial_greetings",
+        "category": "keywords",
+        "content": "hi, hi there, hi bot, hello, hey, what's up, good morning, good afternoon, good evening ...etc",
+        "metadata": {
+            "strictAnswer": "Hello! I am XCare uncle. How can I help you today?"
+        }
     }
 ]

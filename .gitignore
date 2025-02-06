@@ -19,6 +19,6 @@
 # Ignore system files
 .DS_Store
 Thumbs.db
-faiss_store
+.faiss_store
 internalData_store
 answer_store

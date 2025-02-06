@@ -1,19 +1,25 @@
 [
     {
         "topic": "general_symptoms",
-        "category": "diagnose",
+        "category": "keywords",
+        "content": "symptom, headache, toothache, fever, flu, cold, unconscious, accident, arm broken, leg broken, stomachache, heart attack",
+        "metadata": {}
+    },
+    {
+        "topic": "general_symptoms",
+        "category": "infos",
         "content": "critical symptoms such as unconscious, accident, arm broken, leg broken, stomachache, heart attack...etc",
         "metadata": {}
     },
     {
         "topic": "general_symptoms",
-        "category": "diagnose",
+        "category": "infos",
         "content": "low symptoms such as headache, toothache, fever, flu, cold...etc",
         "metadata": {}
     },
     {
         "topic": "general_symptoms",
-        "category": "advice",
+        "category": "infos",
         "content": "For low symptoms, patients should drink enough water, provide vitamin C and sleep well, they will recover soon",
         "metadata": {}
     },
@@ -31,9 +37,11 @@
     },
     {
         "topic": "general_symptoms",
-        "category": "advice",
+        "category": "infos",
         "content": "For critical symptoms, Patients should go to nearby medical centre for technical checkup. Would recommand them to connect with XCare online doctors for advice",
-        "metadata": {}
+        "metadata": {
+            "furtherContent": "You can call XCare hotline: 1900 1234 for online consultation"
+        }
     }
 
 ]

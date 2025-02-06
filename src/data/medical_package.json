@@ -1,0 +1,38 @@
+[
+    {
+        "topic": "medical_package",
+        "category": "keywords",
+        "content": "medical, package, patients, age, older, younger, Adolescent Package, Under30 Package, Middle Age Package, Senior Package, Premium Package",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Patients are below 20 years old can buy Adolescent Package",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Patients are from 20 to 30 years can buy Under30 Package",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Patients are from 31 to 45 years can buy Middle Age Package",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Patients are above 45 years old can buy Senior Package",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Patients are females and above 45 years old can buy Premium Package",
+        "metadata": {}
+    }
+]

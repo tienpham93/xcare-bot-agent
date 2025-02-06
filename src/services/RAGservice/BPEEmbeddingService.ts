@@ -1,7 +1,7 @@
 import { logger } from "../../utils/logger";
 
 
-export class EmbeddingService {
+export class BPEEmbeddingService {
     private readonly dimension: number = 384;
     private readonly vocabSize: number = 10000;
     private readonly maxTokens: number = 512;

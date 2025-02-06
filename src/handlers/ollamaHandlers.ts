@@ -13,24 +13,27 @@ export const postGenerateHandler = async (
             ollamaService.setModel(model);
         }
 
-        const response = await stateManager.handleMessage(sessionId, prompt);
+        const { currentStateName, response }  = await stateManager.handleMessage(sessionId, prompt);
         const sessionMetadata = stateManager.sessions.get(sessionId);
 
         let metadata = {
-            topic: sessionMetadata?.currentState,
-            intent: sessionMetadata?.intent,
+            currentState: currentStateName,
             sessionData: sessionMetadata?.sessionData
         };
 
         let botResponse: OllamaResponse = {
             model: model,
-            message: {
-                role: 'bot',
-                content: response,
-            },
+            message: [
+                {
+                    role: 'user', 
+                    content: prompt 
+                }, { 
+                    role: 'bot', 
+                    content: response
+                }
+            ],
             metadata: {
-                topic: metadata?.topic,
-                intent: metadata?.intent,
+                currentState: metadata?.currentState,
                 sessionData: metadata?.sessionData
             },
         }

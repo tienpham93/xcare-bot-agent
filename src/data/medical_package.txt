@@ -1,5 +1,0 @@
-[medical package topic: Patients are below 20 years old Adolescent_Package]
-[medical package topic: Patients are from 20 to 30 years Under_30_Package]
-[medical package topic: Patients are from 31 to 45  years Middle_Age_Package]
-[medical package topic: Patients are above 45 years old Senior_Package]
-[medical package topic: Patients are females and above 45 years old Premium_Package]

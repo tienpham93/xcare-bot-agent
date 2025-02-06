@@ -34,16 +34,19 @@ export interface OllamaGenerateRequest {
     prompt: string;
 }
 
+export interface Message {
+    role: string;
+    content: string;
+}
+
 export interface OllamaResponse {
     model: string;
-    message: {
-        role: string;
-        content: string;
-    };
+    message: Message[];
     metadata?: {
-        topic?: string;
+        currentState?: string;
+        nextState?: string
         intent?: string;
-        sessionData?: Record<string, any>;
+        sessionData?: {};
     };
 }
 
@@ -67,7 +70,7 @@ export interface MatchResult {
 export interface Conversation {
     topic: string;
     messages: ChatMessage[];
-    metatdata?: Record<string, any>;
+    metadata?: Record<string, any>;
 }
 
 export interface ConversationState {
@@ -81,8 +84,6 @@ export interface ConversationState {
 
 export interface ConversationContext {
     currentState: string;
-    intent: string;
-    entities: Record<string, any>;
     sessionData: Record<string, any>;
 }
 
@@ -91,11 +92,17 @@ export interface Knowledge {
     content: string;
     category: string;
     embedding?: number[];
-    metadata?: Record<string, any>;
+    metadata?: {
+        strictAnswer?: string;
+    }
 }
 
 export interface SearchResult {
+    topic: string;
+    category: string;
     content: string;
     similarity: number;
-    metatdata?: Record<string, any>;
+    metadata?: {
+        strictAnswer?: string;
+    };
 }

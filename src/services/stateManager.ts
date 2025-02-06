@@ -15,126 +15,54 @@ export class ConversationStateManager {
         const states: ConversationState[] = [
             {
                 name: 'initial greetings',
-                topic: 'greetings',
+                topic: 'initial_greetings',
                 transitions: {
-                    'general_questions': 'general_questions',
-                    '*': 'none'
+                    'general_questions': 'general_questions'
                 },
                 handler: async (context) => {
-                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic('greetings', 1);
+                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic(context.currentState, 10);
                     return knowledge || [];
                 }
-            },
-            {
-                name: 'general questions',
-                topic: 'general_questions',
-                transitions: {
-                    'general_questions': 'general_questions',
-                    'general_symptoms': 'general_symptoms',
-                    'medical_package': 'doc_referral',
-                    'contact': 'contact',
-                    'billing': 'billing',
-                    '*': 'none'
-                },
-                handler: async (context) => {
-                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic('general_questions', 1);
-                    return knowledge || [];
-                }
-            },
-            {
-                name: 'general symptoms',
-                topic: 'general_symptoms',
-                transitions: {
-                    'general_questions': 'general_questions',
-                    'yes': 'doc_referral',
-                    'no': 'general_comments',
-                    'billing': 'billing',
-                    '*': 'none'
-                },
-                handler: async (context) => {
-                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic('general_symptoms', 1);
-                    return knowledge || [];
-                }
-            },
-            {
-                name: 'none',
-                topic: 'none',
-                transitions: {
-                    'general_questions': 'general_questions',
-                    '*': 'none'
-                },
-                handler: async (context) => {
-                    return [];
-                }
-            },
+            }
         ];
 
-        states.forEach(state => this.states.set(state.name, state));
+        states.forEach(state => this.states.set(state.topic, state));
     }
 
-    public async handleMessage(sessionId: string, message: string): Promise<string> {
+    public async handleMessage(sessionId: string, prompt: string): Promise<any> {
         // Get or create session
         let context = this.sessions.get(sessionId);
         if (!context) {
             context = {
-                currentState: 'greetings',
-                intent: '',
-                entities: {},
+                currentState: 'initial_greetings',
                 sessionData: {}
             };
             this.sessions.set(sessionId, context);
-        }        
+        }
 
-        // Classify intent and extract entities
-        const { intent, entities } = this.classifyIntent(message);
-        context.intent = intent;
-        context.entities = entities;
+        this.knowledgeBase.searchKnowledgeByTopic
 
         // Get current state
         const currentState = this.states.get(context.currentState);
+        const currentStateName = currentState?.topic || 'none';
         if (!currentState) {
             throw new Error(`State ${context.currentState} not found`);
         }
 
-        // Generate corresponding knowledge based on current state
-        const currentKnowledge = await currentState.handler(context);
-        context.sessionData.knowledge = currentKnowledge;
+        const relevantData = await this.knowledgeBase.searchRelevant(prompt)
+        
+        // Update session data with relevant knowledge
+        context.sessionData.knowledge = relevantData;
 
         // Generate response based on corresponding knowledge
-        const response = await ollamaService.generate(currentKnowledge[0].content);
+        const response = await ollamaService.generate(prompt, relevantData);
+        context.sessionData.completePrompt = response.completePrompt;
 
-        // Transition to next state
-        const nextStateTopic = currentState.transitions[intent] || currentState.transitions['*'];
-        if (nextStateTopic) {
-            context.currentState = nextStateTopic;
-        }
 
-        return response;
-    }
-
-    private classifyIntent(message: string): { intent: string, entities: any } {
-        const normalizedMessage = message.toLowerCase().trim();
-
-        // Confirmation intent
-        if (normalizedMessage.includes('yes')) return { intent: 'yes', entities: {} };
-        if (normalizedMessage.includes('no')) return { intent: 'no', entities: {} };
-
-        // general_symptoms intent
-        if (normalizedMessage.includes('symptom')) return { intent: 'general_symptoms', entities: {} };
-        if (normalizedMessage.includes('headache')) return { intent: 'general_symptoms', entities: {} };
-
-        // billing intent
-        if (normalizedMessage.includes('how much')) return { intent: 'billing', entities: {} };
-
-        // contact intent
-        if (normalizedMessage.includes('contact')) return { intent: 'contact', entities: {} };
-        if (normalizedMessage.includes('email')) return { intent: 'contact', entities: {} };
-        if (normalizedMessage.includes('call')) return { intent: 'contact', entities: {} };
-
-        // medical_package intent
-        if (normalizedMessage.includes('medical package')) return { intent: 'medical_package', entities: {} };
-
-        return { intent: '*', entities: {} };
+        return {
+            currentStateName: currentStateName,
+            response: response.response
+        };
     }
 
 }

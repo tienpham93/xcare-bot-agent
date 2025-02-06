@@ -1,4 +1,4 @@
-import { ChatMessage, ModelConfig, OllamaChatRequest } from "../types";
+import { ChatMessage, ModelConfig, OllamaChatRequest, SearchResult } from "../types";
 import { defautModelConfig, isValidModel } from "../config/modelConfig";
 import { logger } from "../utils/logger";
 import { exec } from "child_process";
@@ -18,7 +18,7 @@ export class OllamaService {
             const model = modelName && isValidModel(modelName) ? modelName : defautModelConfig.name;
             exec(`ollama serve`);
             this.modelConfig.name = model;
-            logger.info({message: 'Initialized model successfully'});
+            logger.info({ message: 'Initialized model successfully' });
         } catch (error) {
             console.error(error);
         }
@@ -26,7 +26,7 @@ export class OllamaService {
 
     async chat(messages: ChatMessage[]): Promise<any> {
         try {
-            const requestBody: OllamaChatRequest = {   
+            const requestBody: OllamaChatRequest = {
                 model: this.modelConfig.name,
                 messages,
                 ...this.modelConfig.parameters
@@ -39,7 +39,7 @@ export class OllamaService {
                 },
                 body: JSON.stringify(requestBody)
             });
-    
+
             if (!response.ok) {
                 throw new Error(`Failed to response with: ${response.statusText}`);
             }
@@ -48,13 +48,13 @@ export class OllamaService {
             const decoder = new TextDecoder('utf-8');
             let result = '';
             let done = false;
-    
+
             while (!done) {
                 const { value, done: streamDone } = await reader!.read();
                 done = streamDone;
                 result += decoder.decode(value, { stream: !done });
             }
-    
+
             const lines = result.split('\n').filter(line => line.trim() !== '');
             const parsedObjects = lines.map(line => JSON.parse(line));
             const fullText = parsedObjects.reduce((acc, obj) => acc + obj.message.content, '');
@@ -66,16 +66,30 @@ export class OllamaService {
         }
     }
 
-    async generate(prompt: string, knowledge?: string): Promise<any> {
+    async generate(prompt: string, relevantResult?: SearchResult[]): Promise<any> {
         try {
-            const completePrompt = `Based on this knowledge: ${knowledge ? knowledge : 'no relevant knowledge'} Please answer the question: ${prompt}`;
+            let contents = [];
+            let strictAnswer = [];
+            let contentText;
+            let strictAnswerText;
+            relevantResult?.forEach(async (result) => {
+                contents.push(result.content);
+                contentText = contents.join('|')
+                strictAnswer.push(result.metadata?.strictAnswer);
+                strictAnswerText = strictAnswer.join(' ')
+            })
 
-            const requestBody: OllamaGenerateRequest = {   
+            const completePrompt =
+                `Based on this knowledge: ${contentText ? contentText : 'no relevant knowledge'} 
+                Please answer the question: ${prompt} 
+                Follow this format: ***{'answer': '<${strictAnswerText ? `Strictly return this text "${strictAnswerText}"` : 'your answer based on the internal knowledge'}>'}***`;
+
+            const requestBody: OllamaGenerateRequest = {
                 model: this.modelConfig.name,
                 stream: false,
                 prompt: completePrompt
             };
-
+           
             const response = await fetch(`${this.baseUrl}/api/generate`, {
                 method: 'POST',
                 headers: {
@@ -83,12 +97,15 @@ export class OllamaService {
                 },
                 body: JSON.stringify(requestBody)
             });
-    
+
             if (!response.ok) {
                 throw new Error(`Failed to response with: ${response.statusText}`);
             }
             const data = await response.json();
-            return data.response;
+            return {
+                response: data.response,
+                completePrompt: completePrompt
+            }
         } catch (error) {
             logger.error('Error when processing the response', error);
             throw error;

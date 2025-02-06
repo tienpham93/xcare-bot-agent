@@ -4,6 +4,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import { logger } from '../utils/logger';
 import * as stopWords from 'stopword';
+import { SearchResult } from '../types';
 
 export class NLPSearchEngine {
 
@@ -50,26 +51,20 @@ export class NLPSearchEngine {
         this.classifier.train();
     }
 
-    public async loadDocuments(directoryPath: string): Promise<Document[]> {
+    public async loadDocuments(results: SearchResult[]): Promise<Document[]> {
         const documents: Document[] = [];
         try {
-            const files = await fs.readdir(directoryPath);
-            const txtFiles = files.filter(file => file.endsWith('.txt'));
-
-            for (const file of txtFiles) {
-                const filePath = path.join(directoryPath, file);
-                const content = await fs.readFile(filePath, 'utf-8');
+            for (const result of results) {
+                result.content
                 const doc = new Document({
-                    pageContent: content,
+                    pageContent: result.content,
                     metadata: {
-                        source: filePath,
-                        filename: path.basename(file),
-                        topic: path.basename(file, '.txt')
+                        topic: result.topic,
+                        category: result.category
                     }
                 });
                 documents.push(doc);
             }
-            logger.info(`Loaded documents from ${directoryPath} successfully`);
             return documents;
         } catch (error) {
             logger.error('Failed to load documents:', error);
@@ -82,7 +77,7 @@ export class NLPSearchEngine {
         const queryTerms = this.tokenizer.tokenize(processedQuery) || [];
 
         const searchResults = this.classifier.getClassifications(queryTerms);
-        console.log(`searchResults:`, searchResults);
+        console.log(`NLP scores:`, searchResults);
 
         let highestResult = { label: '', value: 0 };
 
@@ -104,8 +99,7 @@ export class NLPSearchEngine {
         }
 
         this.matchedTopic = highestResult.label;
-        const matchedContent = this.documents.filter(doc => doc.metadata?.topic === highestResult.label);
-        return matchedContent.map(doc => doc.pageContent).join('\n');
+        return this.matchedTopic;
     }
 
     public async getAllPageContent(): Promise<string> {
