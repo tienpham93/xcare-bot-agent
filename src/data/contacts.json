@@ -1,0 +1,34 @@
+[
+    {
+        "topic": "contacts",
+        "category": "keywords",
+        "content": "email, emails, @, .com, .vn, phone, hotline, contact, contacts, address, location, map, direction, directions, working hours, number, our website",
+        "metadata": {}
+    },
+    {
+        "topic": "contacts",
+        "category": "infos",
+        "content": "Connect to online doctors through XCare hotline 1900 1234",
+        "metadata": {
+            "nextTopic": "billing"
+        }
+    },
+    {
+        "topic": "contacts",
+        "category": "infos",
+        "content": "email feedback@hotmail.com when reporting bad services, unfriendly staff, long wait...etc",
+        "metadata": {}
+    },
+    {
+        "topic": "contacts",
+        "category": "infos",
+        "content": "location 1: 123 Norway District 1 Saigon City, location 2: 222 Norway District 2, Saigon City, location 3: 321 Norway District 3, Saigon City",
+        "metadata": {}
+    },
+    {
+        "topic": "contacts",
+        "category": "infos",
+        "content": "Can review all services and packages at our website www.xcare.com",
+        "metadata": {}
+    }
+]

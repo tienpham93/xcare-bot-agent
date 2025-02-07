@@ -66,23 +66,23 @@ export class OllamaService {
         }
     }
 
-    async generate(prompt: string, relevantResult?: SearchResult[]): Promise<any> {
+    async generate(prompt: string, relevantResult?: SearchResult[] | null): Promise<any> {
         try {
-            let contents = [];
-            let strictAnswer = [];
-            let contentText;
-            let strictAnswerText;
-            relevantResult?.forEach(async (result) => {
-                contents.push(result.content);
-                contentText = contents.join('|')
-                strictAnswer.push(result.metadata?.strictAnswer);
-                strictAnswerText = strictAnswer.join(' ')
-            })
+            let knowledge: any[] = [];
+
+            relevantResult?.forEach((result) => {
+                let content = result.content;
+                let strictAnswer = result.metadata?.strictAnswer ? result.metadata?.strictAnswer : '';
+                knowledge.push(`[content:${content}.${strictAnswer ? `Must reply by this text: ${strictAnswer}` : ''}]`);
+            });
+
+            let knowledgeText = knowledge.join('');
 
             const completePrompt =
-                `Based on this knowledge: ${contentText ? contentText : 'no relevant knowledge'} 
-                Please answer the question: ${prompt} 
-                Follow this format: ***{'answer': '<${strictAnswerText ? `Strictly return this text "${strictAnswerText}"` : 'your answer based on the internal knowledge'}>'}***`;
+                `Based on this knowledge: ${knowledgeText ? knowledgeText : 'no relevant knowledge'} 
+                Please answer the question: ${prompt}
+                If you base on the knowledge that have strict answer, please answer with the provided strict answer text.
+                Follow this format: ***{'answer': <your answer based on the provided knowledge>'}***`;
 
             const requestBody: OllamaGenerateRequest = {
                 model: this.modelConfig.name,

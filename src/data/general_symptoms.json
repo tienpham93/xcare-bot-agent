@@ -2,13 +2,7 @@
     {
         "topic": "general_symptoms",
         "category": "keywords",
-        "content": "symptom, headache, toothache, fever, flu, cold, unconscious, accident, arm broken, leg broken, stomachache, heart attack",
-        "metadata": {}
-    },
-    {
-        "topic": "general_symptoms",
-        "category": "infos",
-        "content": "critical symptoms such as unconscious, accident, arm broken, leg broken, stomachache, heart attack...etc",
+        "content": "symptom, critical, low,feel, remains, better, days ago, headache, toothache, fever, flu, cold, unconscious, accident, arm broken, leg broken, stomachache, heart attack",
         "metadata": {}
     },
     {
@@ -20,28 +14,29 @@
     {
         "topic": "general_symptoms",
         "category": "infos",
-        "content": "For low symptoms, patients should drink enough water, provide vitamin C and sleep well, they will recover soon",
+        "content": "low symptoms usually occur within sessional changes, and can be treated at home, would recommand to stay home, drink enough water, provide vitamin C and sleep well, they will recover soon",
         "metadata": {}
     },
     {
         "topic": "general_symptoms",
         "category": "infos",
-        "content": "critical symptoms are urgent case, and usually lead to internal damges",
-        "metadata": {}
-    },
-    {
-        "topic": "general_symptoms",
-        "category": "infos",
-        "content": "low symptoms usually occur within sessional changes, and can be treated at home",
-        "metadata": {}
-    },
-    {
-        "topic": "general_symptoms",
-        "category": "infos",
-        "content": "For critical symptoms, Patients should go to nearby medical centre for technical checkup. Would recommand them to connect with XCare online doctors for advice",
+        "content": "low symptoms, if don't recover after 3 days, would recommand to connect with XCare online doctors",
         "metadata": {
-            "furtherContent": "You can call XCare hotline: 1900 1234 for online consultation"
+            "nextTopic": "contacts"
+        }
+    },
+    {
+        "topic": "general_symptoms",
+        "category": "infos",
+        "content": "critical symptoms such as unconscious, accident, arm broken, leg broken, stomachache, heart attack...etc",
+        "metadata": {}
+    },
+    {
+        "topic": "general_symptoms",
+        "category": "infos",
+        "content": "critical symptoms are urgent case, and usually lead to internal damges, would recommand to connect with XCare online doctors, then must go to nearby medical centre for quick checkup",
+        "metadata": {
+            "nextTopic": "contacts"
         }
     }
-
 ]

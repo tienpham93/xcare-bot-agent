@@ -69,52 +69,67 @@ export class KnowledgeBase {
         }
     }
 
-    public async searchRelevant(text: string): Promise<SearchResult[] | undefined> {
+    public async searchRelevant(text: string): Promise<SearchResult[] | null> {
+        text = text.toLowerCase();
+
         const bpeQuery = await this.bpeEmbeddings.generateEmbedding(text);
-        const bpeData = await this.vectorStore.search(bpeQuery, 15);
+        const bpeData = await this.vectorStore.search(bpeQuery, 14);
 
         // Filter all objects that have the category "keywords"
         const keywordCategoryObjects = bpeData.filter(obj => obj.category === "keywords");
 
         const minhashQuery = await this.minhashEmbeddings.generateEmbedding(text);
-        const minhashData = await this.vectorStore.search(minhashQuery, 15);
+        const minhashData = await this.vectorStore.search(minhashQuery, 14);
 
         const keywords = await keywordsNLP.loadDocuments(keywordCategoryObjects);
         await keywordsNLP.ingestDocuments(keywords);
         const nlpMatchTopic = await keywordsNLP.search(text);
+        console.log(`>>> NLP matched topic: ${nlpMatchTopic}`);
 
         // Find the object with the highest similarity
         const bpeHighestSimilarity = bpeData.reduce((prev, current) => (prev.similarity > current.similarity) ? prev : current);
         const minHashHighestSimilarity = minhashData.reduce((prev, current) => (prev.similarity > current.similarity) ? prev : current);
-        console.log(`BPE highest: ${bpeHighestSimilarity.topic} score ${bpeHighestSimilarity.similarity}`);
-        console.log(`MinHash highest: ${minHashHighestSimilarity.topic} score ${minHashHighestSimilarity.similarity}`);
+        console.log(`>>> BPE highest: ${bpeHighestSimilarity.topic} score ${bpeHighestSimilarity.similarity}`);
+        console.log(`>>> MinHash highest: ${minHashHighestSimilarity.topic} score ${minHashHighestSimilarity.similarity}`);
 
         // If message contains any keyword in topic knowledge
         if (nlpMatchTopic) {
-            return bpeData.filter(obj => obj.topic === nlpMatchTopic);
+            console.log(`>>> returning NLP matched topic: ${nlpMatchTopic}`);
+            return await this.searchKnowledgeByTopic(nlpMatchTopic, 14);
+        }
+        
+        // Refer the highest between minhash and BPE
+        if (minHashHighestSimilarity.similarity > bpeHighestSimilarity.similarity) {
+            console.log(`>>> returning mishHash matched topic: ${minHashHighestSimilarity.topic}`);
+            return await this.searchKnowledgeByTopic(minHashHighestSimilarity.topic, minHashHighestSimilarity.similarity);
         }
 
-        // Refer the highest of BPE over MinHash
-        if (bpeHighestSimilarity > minHashHighestSimilarity) {
-            return minhashData.filter(obj => obj.topic === bpeHighestSimilarity.topic);
-        }
-
-        // The highest from minhash embeddings
-        return bpeData.filter(obj => obj.topic === minHashHighestSimilarity.topic);
+        console.log(`>>> returning BPE matched topic: ${bpeHighestSimilarity.topic}`);
+        return await this.searchKnowledgeByTopic(bpeHighestSimilarity.topic, bpeHighestSimilarity.similarity);
     }
 
-    public async searchKnowledgeByTopic(topic: string, k: number): Promise<SearchResult[] | null> {
+    public async searchKnowledgeByTopic(topic: string, similarity: number): Promise<SearchResult[] | null> {
         try {
             const documents = await fs.promises.readFile(this.localStorePath, 'utf-8');
             const jsonDocuments = JSON.parse(documents);
-            const matchedDoc = jsonDocuments.find((doc: Knowledge) => doc.topic === topic);
+
+            const matchedDoc = jsonDocuments.filter((doc: Knowledge) => doc.topic === topic);
             if (!matchedDoc) {
                 logger.error(`No document found with topic: ${topic}`);
                 return null;
             }
 
-            const results = await this.vectorStore.searchByTopic(matchedDoc, k);
-            return results;
+            const results: SearchResult[] = matchedDoc.map((doc: Knowledge): SearchResult => {
+                return {
+                    topic: doc.topic,
+                    category: doc.category,
+                    content: doc.content,
+                    similarity: similarity,
+                    metadata: doc.metadata
+                };
+            });
+
+            return await results;
         } catch (error) {
             logger.error('Failed to search knowledge by topic:', error);
             throw error;

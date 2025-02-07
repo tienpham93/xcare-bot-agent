@@ -1,12 +1,17 @@
 import { ollamaService } from "../server";
 import { ConversationContext, ConversationState, SearchResult } from "../types";
+import { logger } from "../utils/logger";
 import { KnowledgeBase } from "./RAGservice/knowledgeBase";
+
+let nextKnowledgeList: SearchResult[] | null;
+let previousKnowledgeList: SearchResult[] | null;
 
 export class ConversationStateManager {
     public states: Map<string, ConversationState> = new Map();
     public sessions: Map<string, ConversationContext> = new Map();
-    
-    constructor (private knowledgeBase: KnowledgeBase) {
+    private currentKnowledge: SearchResult[] = [];
+
+    constructor(private knowledgeBase: KnowledgeBase) {
         this.initializeStates();
     }
 
@@ -14,13 +19,13 @@ export class ConversationStateManager {
         // Define states
         const states: ConversationState[] = [
             {
-                name: 'initial greetings',
-                topic: 'initial_greetings',
+                name: 'initial',
+                topic: 'initial',
                 transitions: {
-                    'general_questions': 'general_questions'
+                    '*': 'general_questions'
                 },
                 handler: async (context) => {
-                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic(context.currentState, 10);
+                    const knowledge = await this.knowledgeBase.searchKnowledgeByTopic(context.currentState, 1);
                     return knowledge || [];
                 }
             }
@@ -34,7 +39,7 @@ export class ConversationStateManager {
         let context = this.sessions.get(sessionId);
         if (!context) {
             context = {
-                currentState: 'initial_greetings',
+                currentState: 'initial',
                 sessionData: {}
             };
             this.sessions.set(sessionId, context);
@@ -49,8 +54,54 @@ export class ConversationStateManager {
             throw new Error(`State ${context.currentState} not found`);
         }
 
-        const relevantData = await this.knowledgeBase.searchRelevant(prompt)
+        // Retrieve relevant knowledge
+        previousKnowledgeList = this.currentKnowledge;
+
+        // Retrieve relevant knowledge
+        let relevantData = await this.knowledgeBase.searchRelevant(prompt);
+        this.currentKnowledge = relevantData ?? [];
+
+        // Retrieve next topic knowledge
+        const nextTopicList: string[] = [];
+        relevantData?.forEach((result) => {
+            const nextTopic = result.metadata?.nextTopic ? result.metadata?.nextTopic : '';
+            if (nextTopic && !nextTopicList.includes(nextTopic)) {
+                nextTopicList.push(nextTopic);
+            }
+        });
+
+        // Merge relevant knowledge with previous knowledge
+        if (previousKnowledgeList) {
+            relevantData = relevantData ? [...relevantData, ...previousKnowledgeList] : previousKnowledgeList;
+
+            // Remove duplicates
+            const uniqueData = new Map();
+            relevantData.forEach(item => uniqueData.set(item.content, item));
         
+            relevantData = Array.from(uniqueData.values());
+            logger.info('Merged relevant knowledge with previous knowledge');
+        }
+
+        // Merge relevant knowledge with next topic knowledge
+        try {
+            if (nextKnowledgeList) {
+                relevantData = relevantData ? [...relevantData, ...nextKnowledgeList] : nextKnowledgeList;
+
+                // Remove duplicates
+                const uniqueData = new Map();
+                relevantData.forEach(item => uniqueData.set(item.content, item));
+            
+                relevantData = Array.from(uniqueData.values());
+            }
+
+            if (nextTopicList.length == 0) {
+                nextKnowledgeList = [];
+            }
+            logger.info('Merged relevant knowledge with next topic knowledge');
+        } catch (error) {
+            logger.error('Failed to merge relevant knowledge with next topic knowledge:', error);
+        }
+
         // Update session data with relevant knowledge
         context.sessionData.knowledge = relevantData;
 
@@ -58,6 +109,19 @@ export class ConversationStateManager {
         const response = await ollamaService.generate(prompt, relevantData);
         context.sessionData.completePrompt = response.completePrompt;
 
+        nextTopicList.forEach(async (topic) => {
+            nextKnowledgeList = await this.knowledgeBase.searchKnowledgeByTopic(topic, 1);
+        });
+
+        // Transition to next state
+        // const nextStateTopic = currentState.transitions[intent] || currentState.transitions['*'];
+        // if (nextStateTopic) {
+        //     context.currentState = nextStateTopic;
+        // }
+
+        // Clean up knowledge
+        relevantData = [];
+        previousKnowledgeList = [];
 
         return {
             currentStateName: currentStateName,

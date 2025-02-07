@@ -9,30 +9,52 @@
         "topic": "medical_package",
         "category": "infos",
         "content": "Patients are below 20 years old can buy Adolescent Package",
-        "metadata": {}
+        "metadata": {
+            "nextTopic": "billing"
+        }
     },
     {
         "topic": "medical_package",
         "category": "infos",
         "content": "Patients are from 20 to 30 years can buy Under30 Package",
-        "metadata": {}
+        "metadata": {
+            "nextTopic": "billing"
+        }
     },
     {
         "topic": "medical_package",
         "category": "infos",
         "content": "Patients are from 31 to 45 years can buy Middle Age Package",
-        "metadata": {}
+        "metadata": {
+            "nextTopic": "billing"
+        }
     },
     {
         "topic": "medical_package",
         "category": "infos",
         "content": "Patients are above 45 years old can buy Senior Package",
-        "metadata": {}
+        "metadata": {
+            "nextTopic": "billing"
+        }
     },
     {
         "topic": "medical_package",
         "category": "infos",
         "content": "Patients are females and above 45 years old can buy Premium Package",
+        "metadata": {
+            "nextTopic": "billing"
+        }
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Adolescent Package, Under30 Package, Middle Age Package, Senior Package, Premium Package are same price as $1000",
+        "metadata": {}
+    },
+    {
+        "topic": "medical_package",
+        "category": "infos",
+        "content": "Can review all services and packages at our website www.xcare.com",
         "metadata": {}
     }
 ]

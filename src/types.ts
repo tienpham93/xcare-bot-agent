@@ -104,5 +104,6 @@ export interface SearchResult {
     similarity: number;
     metadata?: {
         strictAnswer?: string;
+        nextTopic?: string;
     };
 }

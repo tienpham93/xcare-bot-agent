@@ -77,11 +77,11 @@ export class VectorStore {
 
             // Retrieve the documents
             const results: SearchResult[] = labels.map((docIndex: number, i: number) => ({
-                topic: this.documents[docIndex].topic,
-                category: this.documents[docIndex].category,
-                content: this.documents[docIndex].content,
-                similarity: 1 / (1 + distances[i]), // Convert distance to similarity score
-                metadata: this.documents[docIndex].metadata
+                topic: this.documents[docIndex]?.topic ? this.documents[docIndex]?.topic : 'unknown',
+                category: this.documents[docIndex]?.category ? this.documents[docIndex]?.category : 'unknown',
+                content: this.documents[docIndex]?.content ? this.documents[docIndex]?.content : 'unknown',
+                similarity: distances[i] ? (1 / (1 + distances[i])) : 0, // Convert distance to similarity score
+                metadata: this.documents[docIndex]?.metadata ? this.documents[docIndex]?.metadata : {}
             }));
 
             return results;

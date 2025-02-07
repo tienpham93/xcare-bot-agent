@@ -75,29 +75,41 @@ export class NLPSearchEngine {
     public async search(query: string): Promise<string> {
         const processedQuery = await this.preprocessText(query);
         const queryTerms = this.tokenizer.tokenize(processedQuery) || [];
-
+    
         const searchResults = this.classifier.getClassifications(queryTerms);
         console.log(`NLP scores:`, searchResults);
-
+    
         let highestResult = { label: '', value: 0 };
-
-        // If all results are the same then return an empty string
-        if (searchResults.every(result => result.value === searchResults[0].value)) {
-            return '';
-        }
-
-        // Find the highest result that is above a certain threshold
+        let highestResults: natural.ApparatusClassification[] = [];
+    
+        // Find the highest result value
         for (const result of searchResults) {
-            if (result.value >= 0.2 && result.value > highestResult.value) {
+            if (result.value > highestResult.value) {
                 highestResult = result;
+                highestResults = [result];
+            } else if (result.value === highestResult.value) {
+                highestResults.push(result);
             }
         }
-
+    
+        // If all results are the same then return an empty string
+        if (highestResults.length === searchResults.length) {
+            return '';
+        }
+    
+        // Filter out "greetings" if there are multiple highest results
+        if (highestResults.length > 1) {
+            const nonGreetingResults = highestResults.filter(result => result.label !== 'greetings' && result.label !== 'initial_greetings');
+            if (nonGreetingResults.length > 0) {
+                highestResult = nonGreetingResults[0];
+            }
+        }
+    
         // If no relevance then return an empty string
         if (!highestResult.label) {
             return '';
         }
-
+    
         this.matchedTopic = highestResult.label;
         return this.matchedTopic;
     }

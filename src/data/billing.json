@@ -1,0 +1,50 @@
+[
+    {
+        "topic": "billing",
+        "category": "keywords",
+        "content": "much, how much, expensive, cheap, package, price, moneny, fee, charge, free, pay, payment, $, usd, card, cash, offline, online",
+        "metadata": {}
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "Online consult with online doctors through XCare hotline 1900 1234 is free",
+        "metadata": {
+            "nextTopic": "contacts"
+        }
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "Offline consult with doctor is from approximately $100 to $200 per visit",
+        "metadata": { 
+            "nextTopic": "contacts"
+        }
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "oscopy fees are from approximately $200 to $1000",
+        "metadata": {}
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "General surgeries are from approximately $1000 to $10000",
+        "metadata": {}
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "Adolescent Package, Under30 Package, Middle Age Package, Senior Package, Premium Package are same price as $1000",
+        "metadata": {
+            "nextTopic": "medical_package"
+        }
+    },
+    {
+        "topic": "billing",
+        "category": "infos",
+        "content": "All services and packages can be pay by card or cash",
+        "metadata": {}
+    }
+]
