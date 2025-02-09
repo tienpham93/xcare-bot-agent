@@ -107,3 +107,32 @@ export interface SearchResult {
         nextTopic?: string;
     };
 }
+
+export interface User {
+    id: string;
+    fullname: string;
+    username: string;
+    gender: string;
+    age: string;
+    email: string;
+    user_type: string;
+    credentials: UserCredential;
+}
+
+export interface UserCredential {
+    username: string;
+    password: string;
+}
+
+export interface AuthResponse {
+    user: User;
+    token: string;
+}
+
+export interface Ticket {
+    id: string;
+    title: string;
+    content: string;
+    createdBy: string;
+    createdDate: Date;
+}

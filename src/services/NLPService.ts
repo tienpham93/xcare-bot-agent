@@ -1,7 +1,5 @@
 import natural from 'natural';
 import { Document } from '@langchain/core/documents';
-import fs from 'fs/promises';
-import path from 'path';
 import { logger } from '../utils/logger';
 import * as stopWords from 'stopword';
 import { SearchResult } from '../types';

@@ -2,12 +2,27 @@ import { Request, Response } from 'express';
 import { OllamaResponse } from '../types';
 import { logger } from '../utils/logger';
 import { ollamaService, stateManager } from '../server';
+import { AuthService } from '../services/authService';
 
 export const postGenerateHandler = async (
     req: Request,
     res: Response
 ) => {
     const { model, prompt, sessionId = 'greeting' } = req.body;
+
+    // Verify Auth Token
+    const authService = new AuthService();
+    const authToken = req.headers.authorization;
+
+    if (authToken) {
+        authService.verifyTokenFromHeader(authToken);
+    } else {
+        logger.error('Unauthorized request');
+        res.status(401).json({ error: 'Unauthorized request' });
+        return;
+    }
+
+    // Handle Prompt
     try {
         if (model) {
             ollamaService.setModel(model);

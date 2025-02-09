@@ -1,0 +1,41 @@
+[
+    {
+        "id": 1,
+        "fullName": "Tien Pham",
+        "username": "tienpham",
+        "gender": "male",
+        "age": "31",
+        "email": "phamminhtien7693@gmail.com",
+        "user_type": "super_user",
+        "credentials": {
+            "username": "Tien Pham",
+            "password": "tienpham"
+        }
+    },
+    {
+        "id": 2,
+        "fullName": "Jennie Park",
+        "username": "jennie123",
+        "gender": "female",
+        "age": "24",
+        "email": "jennie123@hotmail.com",
+        "user_type": "user",
+        "credentials": {
+            "username": "jennie123",
+            "password": "11223355"
+        }
+    },
+    {
+        "id": 3,
+        "fullName": "Jerry Harris",
+        "username": "jerry123",
+        "gender": "male",
+        "age": "28",
+        "email": "jerry123@hotmail.com",
+        "user_type": "user",
+        "credentials": {
+            "username": "jerry123",
+            "password": "11223355"
+        }
+    }
+]
