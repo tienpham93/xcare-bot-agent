@@ -7,6 +7,6 @@ const router = express.Router();
 router.post('/agent/generate', postGenerateHandler);
 
 router.post('/agent/login', postLoginHandler);
-router.post('/agent/tickets', getTicketsHandler);
+router.get('/agent/tickets', getTicketsHandler);
 
 export default router;

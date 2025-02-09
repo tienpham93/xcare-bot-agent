@@ -135,4 +135,5 @@ export interface Ticket {
     content: string;
     createdBy: string;
     createdDate: Date;
+    status: 'Completed' | 'Inprogress' | 'Open';
 }

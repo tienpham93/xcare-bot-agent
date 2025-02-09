@@ -4,21 +4,39 @@
         "title": "Demo 101",
         "content": "test 101",
         "createdBy": "tienpham",
-        "createdDate": "2021-01-01T12:00:00"
+        "createdDate": "2021-01-01T12:00:00",
+        "status": "Completed"
     },
     {
         "id": 2,
         "title": "Demo 102",
         "content": "test 102",
-        "createdBy": "tienpham",
-        "createdDate": "2021-01-01T12:00:00"
+        "createdBy": "jennie123",
+        "createdDate": "2021-01-01T12:00:00",
+        "status": "Completed"
     },
     {
         "id": 3,
         "title": "Demo 102",
         "content": "test 103",
         "createdBy": "tienpham",
-        "createdDate": "2021-01-01T12:00:00"
+        "createdDate": "2021-01-01T12:00:00",
+        "status": "Completed"
+    },
+    {
+        "id": 4,
+        "title": "Demo 102",
+        "content": "test 103",
+        "createdBy": "tienpham",
+        "createdDate": "2021-01-01T12:00:00",
+        "status": "Inprogress"
+    },
+    {
+        "id": 4,
+        "title": "Demo 102",
+        "content": "test 103",
+        "createdBy": "tienpham",
+        "createdDate": "2021-01-01T12:00:00",
+        "status": "Open"
     }
-
 ]

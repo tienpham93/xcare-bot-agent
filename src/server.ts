@@ -6,7 +6,6 @@ import { ollamaPort, expressPort } from './env';
 import { KnowledgeBase } from './services/RAGservice/knowledgeBase';
 import { ConversationStateManager } from './services/stateManager';
 import { NLPSearchEngine } from './services/NLPService';
-import { AuthService } from './services/authService';
 
 const app = express();
 const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
@@ -14,7 +13,7 @@ const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
 // Initialize the Ollama service
 export const ollamaService = new OllamaService(ollamaHost);
 
-// Initialize the knowledge base
+// Initialize RAG service
 export const knowledgeBase = KnowledgeBase.getInstance();
 export const keywordsNLP = new NLPSearchEngine();
 export let stateManager: ConversationStateManager;

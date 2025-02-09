@@ -17,10 +17,12 @@ export const postLoginHandler = async (req: Request, res: Response): Promise<voi
 };
 
 export const getTicketsHandler = async (req: Request, res: Response): Promise<void> => {
-    
     // Verify Auth Token
     const authService = new AuthService();
     const authToken = req.headers.authorization;
+
+    // Get createdBy from query
+    const { createdBy } = req.query;
 
     if (authToken) {
         authService.verifyTokenFromHeader(authToken);
@@ -34,7 +36,8 @@ export const getTicketsHandler = async (req: Request, res: Response): Promise<vo
         // Get ticket form json file
         const data = fs.readFileSync(path.join(process.cwd(), 'src/data/ticketsData.json'), 'utf8');
         const tickets = JSON.parse(data);
-        res.json(tickets);
+        const ticketByUser = tickets.filter((ticket: any) => ticket.createdBy === createdBy);
+        res.json(ticketByUser);
     } catch (error) {
         res.status(404).json({ error: 'Tickets not found' });
     }
