@@ -1,0 +1,24 @@
+[
+    {
+        "topic": "hot_topics",
+        "category": "keywords",
+        "content": "Covid-19, coronavirus, Submit a ticket, Raise a ticket, Raise requests",
+        "metadata": {}
+    },
+    {
+        "topic": "hot_topics",
+        "category": "infos",
+        "content": "Covid-19 possible includes fever, cough, shortness of breath, fatigue, body aches, loss of taste or smell, sore throat, congestion",
+        "metadata": {
+            "nextTopic": "general_sysmptoms"
+        }
+    },
+    {
+        "topic": "hot_topics",
+        "category": "infos",
+        "content": "If you have Covid-19 at higher risk for severe illness, talk to your healthcare provider as soon as possible.In order to have vaccination, which is the first step to prevent severe health outcomes.",
+        "metadata": {
+            "nextTopic": "general_sysmptoms"
+        }
+    }
+]

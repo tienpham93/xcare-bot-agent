@@ -50,21 +50,10 @@ export interface OllamaResponse {
     };
 }
 
-export enum MatchType {
-    KEYWORD = 'keyword',
-    SEMANTIC = 'semantic'
-}
-
 export interface InternalData {
     topics: string[];
     content: string;
     keywords: string[];
-}
-
-export interface MatchResult {
-    data: InternalData;
-    score: number;
-    matchType: MatchType;
 }
 
 export interface Conversation {
@@ -135,5 +124,5 @@ export interface Ticket {
     content: string;
     createdBy: string;
     createdDate: Date;
-    status: 'Completed' | 'Inprogress' | 'Open';
+    status: 'Completed' | 'Inprogress' | 'Open' | 'Closed';
 }

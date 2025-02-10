@@ -8,7 +8,8 @@ import { ConversationStateManager } from './services/stateManager';
 import { NLPSearchEngine } from './services/NLPService';
 
 const app = express();
-const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
+export const ollamaHost = `http://127.0.0.1:${ollamaPort}`;
+export const serverHost = `http://localhost:${expressPort}`;
 
 // Initialize the Ollama service
 export const ollamaService = new OllamaService(ollamaHost);
@@ -36,6 +37,6 @@ app.use(express.json());
 
 app.use(router);
 app.listen(expressPort, () => {    
-    logger.info(`Express is running at http://localhost:${expressPort}`);
+    logger.info(`Express is running at ${serverHost}`);
     logger.info(`Model ${ollamaService.modelConfig.name} is running at http://localhost:${ollamaPort}`);
 });

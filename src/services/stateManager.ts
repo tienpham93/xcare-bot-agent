@@ -34,7 +34,7 @@ export class ConversationStateManager {
         states.forEach(state => this.states.set(state.topic, state));
     }
 
-    public async handleMessage(sessionId: string, prompt: string): Promise<any> {
+    public async handleMessage(sessionId: string, prompt: string, messageType: string, username: string): Promise<any> {
         // Get or create session
         let context = this.sessions.get(sessionId);
         if (!context) {
@@ -77,7 +77,7 @@ export class ConversationStateManager {
             // Remove duplicates
             const uniqueData = new Map();
             relevantData.forEach(item => uniqueData.set(item.content, item));
-        
+
             relevantData = Array.from(uniqueData.values());
             logger.info('Merged relevant knowledge with previous knowledge');
         }
@@ -90,7 +90,7 @@ export class ConversationStateManager {
                 // Remove duplicates
                 const uniqueData = new Map();
                 relevantData.forEach(item => uniqueData.set(item.content, item));
-            
+
                 relevantData = Array.from(uniqueData.values());
             }
 
@@ -106,18 +106,18 @@ export class ConversationStateManager {
         context.sessionData.knowledge = relevantData;
 
         // Generate response based on corresponding knowledge
-        const response = await ollamaService.generate(prompt, relevantData);
+        let response;
+        if (messageType === 'submit') {
+            response = await ollamaService.submitTicket(username, prompt, relevantData);
+        } else {
+            response = await ollamaService.generate(username, prompt, relevantData);
+        }
+
         context.sessionData.completePrompt = response.completePrompt;
 
         nextTopicList.forEach(async (topic) => {
             nextKnowledgeList = await this.knowledgeBase.searchKnowledgeByTopic(topic, 1);
         });
-
-        // Transition to next state
-        // const nextStateTopic = currentState.transitions[intent] || currentState.transitions['*'];
-        // if (nextStateTopic) {
-        //     context.currentState = nextStateTopic;
-        // }
 
         // Clean up knowledge
         relevantData = [];

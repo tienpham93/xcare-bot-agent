@@ -11,3 +11,13 @@ export const extractSubString = (string: string, regex: RegExp): any => {
     }
     return null;
 }
+
+export const parseAnswer = (response: string): any => {
+    const match = response.match(/\*\*\*({.*})\*\*\*/);
+    if (match && match[1]) {
+        const jsonString = match[1]
+            .replace(/True/g, 'true')
+        return JSON.parse(jsonString);
+    }
+    return {};
+};

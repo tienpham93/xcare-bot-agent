@@ -8,8 +8,7 @@ export const postGenerateHandler = async (
     req: Request,
     res: Response
 ) => {
-    const { model, prompt, sessionId = 'greeting' } = req.body;
-
+    const { model, prompt, sessionId = 'greeting', messageType, username } = req.body;
     // Verify Auth Token
     const authService = new AuthService();
     const authToken = req.headers.authorization;
@@ -28,7 +27,7 @@ export const postGenerateHandler = async (
             ollamaService.setModel(model);
         }
 
-        const { currentStateName, response }  = await stateManager.handleMessage(sessionId, prompt);
+        const { currentStateName, response }  = await stateManager.handleMessage(sessionId, prompt, messageType, username);
         const sessionMetadata = stateManager.sessions.get(sessionId);
 
         let metadata = {
