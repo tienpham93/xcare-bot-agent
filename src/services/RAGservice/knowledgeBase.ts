@@ -31,16 +31,7 @@ export class KnowledgeBase {
     public async initializeKnowledgeBase(sourcePath: string): Promise<void> {
         try {
             const documents = await this.vectorStore.load(sourcePath);
-            const predefinedKnowledge: Knowledge[] = [
-                {
-                    topic: 'initial_greetings',
-                    content: "hi, hi there, hi bot, hello, hey, what's up, good morning, good afternoon, good evening ...etc",
-                    category: 'keywords',
-                    metadata: {
-                        strictAnswer: 'Hello! I am XCare uncle. How can I help you today?'
-                    }
-                }
-            ];
+            const predefinedKnowledge: Knowledge[] = [];
             const allKnowledge = documents.concat(predefinedKnowledge);
             // Add predefined knowledge to the vector store
             const knowledgeWithEmbeddings = await Promise.all(

@@ -84,3 +84,23 @@ export const postTicketHandler = async (req: Request, res: Response): Promise<vo
         res.status(500).json({ error: 'Failed to create ticket' });
     }
 };
+
+export const postAnalyticHandler = async (req: Request, res: Response): Promise<void> => {
+    const { conversation, vote } = req.body;
+    try {
+        const data = fs.readFileSync(path.join(process.cwd(), 'src/data/analyticData.json'), 'utf8');
+        const voteData = await JSON.parse(data);
+        const newVote = {
+            conversation: {
+                user: conversation.user,
+                bot: conversation.bot
+            },
+            vote: vote
+        };
+        await voteData.push(newVote);
+        fs.writeFileSync(path.join(process.cwd(), 'src/data/analyticData.json'), JSON.stringify(await voteData, null, 2));
+        res.json(newVote);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to save vote data' });
+    }
+};

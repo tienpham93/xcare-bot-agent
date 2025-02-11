@@ -38,5 +38,12 @@
         "metadata": {
             "nextTopic": "contacts"
         }
+    },
+    {
+        "topic": "hot_topics",
+        "category": "infos",
+        "content": "If you have Covid-19 at higher risk for severe illness, talk to your healthcare provider as soon as possible.In order to have vaccination, which is the first step to prevent severe health outcomes.",
+        "metadata": {
+        }
     }
 ]
