@@ -26,5 +26,19 @@
       "bot": " Id be happy to help! Whats your question or concern about health?"
     },
     "vote": "down"
+  },
+  {
+    "conversation": {
+      "user": "it remains 4 days, I don't get any better",
+      "bot": " If you dont recover after 3 days, would recommand to connect with XCare online doctors., isManIntervention: false"
+    },
+    "vote": "dislike"
+  },
+  {
+    "conversation": {
+      "user": "But the symptom remains 4 days and I don't get any better since",
+      "bot": " We would recommend that you connect with our online doctors. Low symptoms can usually be treated at home, but if they don't recover after 3 days, it's best to seek further medical attention."
+    },
+    "vote": "like"
   }
 ]

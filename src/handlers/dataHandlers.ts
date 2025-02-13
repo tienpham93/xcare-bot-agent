@@ -104,3 +104,24 @@ export const postAnalyticHandler = async (req: Request, res: Response): Promise<
         res.status(500).json({ error: 'Failed to save vote data' });
     }
 };
+
+export const postMonitoringHandler = async (req: Request, res: Response): Promise<void> => {
+    const { conversation, isManIntervention } = req.body;
+
+    try {
+        const data = fs.readFileSync(path.join(process.cwd(), 'src/data/monitoringData.json'), 'utf8');
+        const monitorData = await JSON.parse(data);
+        const newMonitorData = {
+            conversation: {
+                user: conversation.user,
+                bot: conversation.bot
+            },
+            isManIntervention: isManIntervention
+        };
+        await monitorData.push(newMonitorData);
+        fs.writeFileSync(path.join(process.cwd(), 'src/data/monitoringData.json'), JSON.stringify(await monitorData, null, 2));
+        res.json(newMonitorData);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to save vote data' });
+    }
+};

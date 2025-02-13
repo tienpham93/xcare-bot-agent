@@ -1,0 +1,17 @@
+[
+    {
+        "topic": "service_desk",
+        "category": "keywords",
+        "content": "emergency, service desk, help desk, technican, urgent issue, problem, incident, SOS",
+        "metadata": {}
+    },
+    {
+        "topic": "service_desk",
+        "category": "infos",
+        "content": "User request for emergency, service desk, help desk, technican, urgent issue, problem, incident, SOS",
+        "metadata": {
+            "strictAnswer": "Please wait for awhile! A technician will assist you shortly",
+            "isManIntervention": true
+        }
+    }
+]

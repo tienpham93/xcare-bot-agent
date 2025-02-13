@@ -73,7 +73,6 @@ export class NLPSearchEngine {
     public async search(query: string): Promise<string> {
         const processedQuery = await this.preprocessText(query);
         const queryTerms = this.tokenizer.tokenize(processedQuery) || [];
-    
         const searchResults = this.classifier.getClassifications(queryTerms);
         console.log(`NLP scores:`, searchResults);
     

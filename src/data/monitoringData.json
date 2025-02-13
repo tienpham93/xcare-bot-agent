@@ -1,0 +1,23 @@
+[
+  {
+    "converation": {
+      "user": "hello bot",
+      "bot": "Go to hell"
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I want to connect to your technican",
+      "bot": "***{\"answer\": \"Please wait for awhile! A technician will assist you shortly\", \"isManIntervention\": true}***"
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I want to report an incident",
+      "bot": "Please wait for awhile! A technician will assist you shortly"
+    },
+    "isManIntervention": true
+  }
+]

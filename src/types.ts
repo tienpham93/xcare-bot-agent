@@ -94,6 +94,7 @@ export interface SearchResult {
     metadata?: {
         strictAnswer?: string;
         nextTopic?: string;
+        isManIntervention?: boolean;
     };
 }
 

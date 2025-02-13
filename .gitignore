@@ -22,3 +22,11 @@ Thumbs.db
 .faiss_store
 internalData_store
 answer_store
+playwright-report
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/

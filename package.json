@@ -1,40 +1,46 @@
 {
-    "name": "ollama-agent",
-    "version": "1.0.0",
-    "private": true,
-    "main": "src/server.ts",
-    "license": "MIT",
-    "scripts": {
-        "start": "yarn clean && yarn build && node dist/server.js",
-        "build": "tsc",
-        "clean": "rimraf dist && rimraf .faiss_store"
-    },
-    "dependencies": {
-        "@langchain/community": "^0.2.28",
-        "@langchain/core": "^0.2.27",
-        "@langchain/ollama": "^0.1.5",
-        "express": "^4.18.2",
-        "faiss-node": "^0.5.1",
-        "langchain": "^0.3.15",
-        "natural": "^8.0.1",
-        "node-fetch": "^2.7.0",
-        "qs": "^6.14.0",
-        "stopword": "^3.1.4",
-        "winston": "^3.11.0",
-        "jsonwebtoken": "^9.0.2",
-        "cors": "2.8.5",
-        "body-parser": "^1.20.3"
-    },
-    "devDependencies": {
-        "@types/express": "^4.17.21",
-        "@types/natural": "^5.1.5",
-        "@types/node": "^20.10.0",
-        "@types/node-fetch": "^2.6.9",
-        "@types/stopword": "^2.0.3",
-        "@types/jsonwebtoken": "^9.0.8",
-        "nodemon": "^3.0.0",
-        "rimraf": "^3.0.2",
-        "ts-node": "^10.9.1",
-        "typescript": "^5.0.0"
-    }
+  "name": "ollama-agent",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/server.ts",
+  "license": "MIT",
+  "scripts": {
+    "start": "yarn clean && yarn build && node dist/server.js",
+    "build": "tsc",
+    "clean": "rimraf dist && rimraf .faiss_store",
+    "test": "npx playwright test",
+    "test:gui": "npx playwright test --ui"
+  },
+  "dependencies": {
+    "@langchain/community": "^0.2.28",
+    "@langchain/core": "^0.2.27",
+    "@langchain/ollama": "^0.1.5",
+    "body-parser": "^1.20.3",
+    "cors": "2.8.5",
+    "express": "^4.18.2",
+    "faiss-node": "^0.5.1",
+    "jsonwebtoken": "^9.0.2",
+    "langchain": "^0.3.15",
+    "natural": "^8.0.1",
+    "node-fetch": "^2.7.0",
+    "qs": "^6.14.0",
+    "stopword": "^3.1.4",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.8",
+    "@types/natural": "^5.1.5",
+    "@types/node": "^20.10.0",
+    "@types/node-fetch": "^2.6.9",
+    "@types/stopword": "^2.0.3",
+    "nodemon": "^3.0.0",
+    "playwright": "^1.50.1",
+    "rimraf": "^3.0.2",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.0"
+  },
+  "repository": "https://github.com/tienpham93/OllamaAgent.git",
+  "author": "tien pham <phamminhtien7693@gmail.com>"
 }

@@ -27,11 +27,24 @@ const knowledgeFormat = (relevantResult?: SearchResult[] | null) => {
     return knowledge.join("");
 }
 
-export const generateQuery = (knowledge: string, userQuery: string) => {
+const isManIntervention = (knowledge: SearchResult[]) => {
+    let isManIntervention = false;
+    knowledge.forEach((result) => {
+        if (result.metadata?.isManIntervention) {
+            isManIntervention = true;
+        }
+    });
+
+    return isManIntervention;
+}
+
+export const generateQuery = (knowledge: string, userQuery: string, isIntervention?: boolean) => {
     return `Based on this knowledge: ${knowledge ? knowledge : "no relevant knowledge"} 
     Please answer the question: ${userQuery}
-    If you base on the knowledge that have strict answer, please answer with the provided strict answer text.
-    Follow this format: ***{"answer": "<your answer based on the provided knowledge>"}***`;
+    Follow this format: ***{"answer": "<your answer based on the provided knowledge>", "isManIntervention": ${isIntervention ? true : false}}***
+    Answer rules: 
+    1. If you choose the knowledge that have strict answer, please answer with the provided strict answer text.
+    2. If you don't know the answer, please stritly follow this format: ***{"answer": "your query is out of my knowledge, please wait for a minute! I am connecting you to service desk team", "isManIntervention": true}***`;
 };
 
 export const submitTicket = (userInfos: string, userQuery: string) => {
@@ -45,8 +58,9 @@ export const submitTicket = (userInfos: string, userQuery: string) => {
 export const promptGenerator = async (messageType: string, message: string, knowledge: SearchResult[], username?: string) => {
     switch (messageType) {
         case "general":
+            const isIntervention = isManIntervention(knowledge);
             const knowledgeText = knowledgeFormat(knowledge);
-            return generateQuery(knowledgeText, message);
+            return generateQuery(knowledgeText, message, isIntervention);
         case "submit":
             const userInfo = username ? await userInfos(username) : "";
             return submitTicket(userInfo, message);
