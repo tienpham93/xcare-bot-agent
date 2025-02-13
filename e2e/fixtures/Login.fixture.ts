@@ -21,7 +21,6 @@ export class ApiFixture {
         });
 
         const responseBody = await response.json();
-
         this.bearerToken = `Bearer ${responseBody.token}`;
         this.userMetadata = responseBody.userMetadata;
     }
@@ -43,8 +42,7 @@ export class ApiFixture {
 
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
-        console.log('====>>>', responseBody);
-        return responseBody.data.conversation.message[1].content;
+        return responseBody.conversation.message[1].content;
     }
 
 }
