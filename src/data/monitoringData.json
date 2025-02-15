@@ -19,5 +19,54 @@
       "bot": "Please wait for awhile! A technician will assist you shortly"
     },
     "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I want to report an incident",
+      "bot": "Please wait for awhile! A technician will assist you shortly"
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "My wife is 29 years old, what medical package I can buy for her?",
+      "bot": "You can buy Under30 Package for your wife since she's 29 years old."
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I am 18 years old, what medical package I can buy?",
+      "bot": "You can buy Adolescent Package."
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "My wife is 29 years old, what medical package I can buy for her?",
+      "bot": "Your wife can buy Under30 Package as she is 29 years old."
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I want to report an incident",
+      "bot": "Please wait for awhile! A technician will assist you shortly"
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "I want to report an urgent issue",
+      "bot": "Please wait for awhile! A technician will assist you shortly"
+    },
+    "isManIntervention": true
+  },
+  {
+    "conversation": {
+      "user": "My wife is 29 years old, what medical package I can buy for her?",
+      "bot": "Since your wife is 29 years old, she falls into the Under30 category. You can buy her an Under30 Package, which is available for $1000."
+    },
+    "isManIntervention": true
   }
 ]

@@ -20,6 +20,7 @@
 .DS_Store
 Thumbs.db
 .faiss_store
+.github
 internalData_store
 answer_store
 playwright-report
@@ -30,3 +31,4 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+test-results
