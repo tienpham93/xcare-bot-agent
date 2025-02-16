@@ -30,6 +30,9 @@ export class AuthService {
     }
 
     public verifyJwtToken(token: string): boolean {
+        if(!token) {
+            return false;
+        }
         try {
             jwt.verify(token, this.jwtSecret);
             return true;
@@ -39,7 +42,7 @@ export class AuthService {
     }
 
     public verifyTokenFromHeader(token: string): boolean {
-        const bearerToken = token.split(' ')[1];
+        const bearerToken = token.replace('Bearer ', '');
         return this.verifyJwtToken(bearerToken);
     }
 

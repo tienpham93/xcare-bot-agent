@@ -15,7 +15,11 @@ export const postGenerateHandler = async (
     const authToken = req.headers.authorization;
 
     if (authToken) {
-        authService.verifyTokenFromHeader(authToken);
+        if (!authService.verifyTokenFromHeader(authToken)) {
+            logger.error('Unauthorized request');
+            res.status(401).json({ error: 'Unauthorized request' });
+            return;
+        }
     } else {
         logger.error('Unauthorized request');
         res.status(401).json({ error: 'Unauthorized request' });
@@ -28,7 +32,7 @@ export const postGenerateHandler = async (
             ollamaService.setModel(model);
         }
 
-        const { currentStateName, response }  = await stateManager.handleMessage(sessionId, prompt, messageType, username);
+        const { currentStateName, response } = await stateManager.handleMessage(sessionId, prompt, messageType, username);
         const sessionMetadata = stateManager.sessions.get(sessionId);
 
         let metadata = {
@@ -40,10 +44,10 @@ export const postGenerateHandler = async (
             model: model,
             message: [
                 {
-                    role: 'user', 
-                    content: prompt 
-                }, { 
-                    role: 'bot', 
+                    role: 'user',
+                    content: prompt
+                }, {
+                    role: 'bot',
                     content: response
                 }
             ],

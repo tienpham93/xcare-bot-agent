@@ -1,4 +1,4 @@
-import { test } from '../fixtures/fixtureConfig';
+import { test } from '../../fixtures/fixtureConfig';
 
 const service_desk_list = [
     {

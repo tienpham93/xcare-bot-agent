@@ -12,14 +12,20 @@ interface ExtendedExpect extends Expect {
 
 type CustomFixtures = {
     apiFixture: ApiFixture;
+    rawApiFixture: ApiFixture;
     customExpect: ExtendedExpect;
 }
 
 export const test = baseTest.extend<CustomFixtures>({
     apiFixture: async ({ request }, use) => {
         const apiFixture = new ApiFixture(request);
-        await apiFixture.getLoginData('tienpham', 'tienpham');
+        const authen = await apiFixture.getLoginData('tienpham', 'tienpham');
+        await apiFixture.setBearerToken(authen.token);
         await use(apiFixture);
+    },
+    rawApiFixture: async ({ request }, use) => {
+        const rawApiFixture = new ApiFixture(request);
+        await use(rawApiFixture);
     },
     customExpect: async ({ }, use) => {
         const customExpect = expect.extend(customMatchers) as unknown as ExtendedExpect;

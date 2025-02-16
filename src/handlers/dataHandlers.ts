@@ -45,7 +45,11 @@ export const getTicketsHandler = async (req: Request, res: Response): Promise<vo
     const { createdBy } = req.query;
 
     if (authToken) {
-        authService.verifyTokenFromHeader(authToken);
+        if (!authService.verifyTokenFromHeader(authToken)) {
+            logger.error('Unauthorized request');
+            res.status(401).json({ error: 'Unauthorized request' });
+            return;
+        }
     } else {
         logger.error('Unauthorized request');
         res.status(401).json({ error: 'Unauthorized request' });

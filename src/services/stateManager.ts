@@ -35,6 +35,10 @@ export class ConversationStateManager {
     }
 
     public async handleMessage(sessionId: string, prompt: string, messageType: string, username: string): Promise<any> {
+        if(!sessionId) {
+            throw new Error('Session ID is required');
+        }
+
         // Get or create session
         let context = this.sessions.get(sessionId);
         if (!context) {
@@ -107,10 +111,15 @@ export class ConversationStateManager {
 
         // Generate response based on corresponding knowledge
         let response;
-        if (messageType === 'submit') {
-            response = await ollamaService.submitTicket(username, prompt, relevantData);
-        } else {
-            response = await ollamaService.generate(username, prompt, relevantData);
+        switch (messageType) {
+            case 'submit':
+                response = await ollamaService.submitTicket(username, prompt, relevantData);
+                break;
+            case 'general':
+                response = await ollamaService.generate(username, prompt, relevantData);
+                break;
+            default:
+                throw new Error('Invalid message type');
         }
 
         context.sessionData.completePrompt = response.completePrompt;

@@ -1,4 +1,4 @@
-import { test } from '../fixtures/fixtureConfig';
+import { test } from '../../fixtures/fixtureConfig';
 
 test('Ask for Low symptoms infos', async ({ apiFixture, customExpect }) => {
     const payload = {

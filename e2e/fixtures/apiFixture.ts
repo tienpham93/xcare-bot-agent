@@ -12,7 +12,11 @@ export class ApiFixture {
 
     }
 
-    public async getLoginData(username: string, password: string) {
+    public async setBearerToken(token: string) {
+        this.bearerToken = token;
+    }
+
+    public async getLoginData(username: string, password: string): Promise<any> {
         const response = await this.request.post('/agent/login', {
             data: {
                 username: username,
@@ -21,8 +25,10 @@ export class ApiFixture {
         });
 
         const responseBody = await response.json();
-        this.bearerToken = `Bearer ${responseBody.token}`;
-        this.userMetadata = responseBody.userMetadata;
+        return {
+            token: responseBody.token,
+            userMetadata: responseBody.userMetadata
+        };
     }
 
     public async agentGenerate(payload: GeneratePayload) {
@@ -33,15 +39,17 @@ export class ApiFixture {
             },
             data: {
                 username: payload.username || this.userMetadata.username,
-                messageType: payload.messageType || 'general',
+                messageType: payload.messageType,
                 sessionId: payload.sessionId,
-                model: payload.model || 'x-care-uncle',
+                model: payload.model || '',
                 prompt: payload.prompt
             }
         });
-
-        expect(response.status()).toBe(200);
         const responseBody = await response.json();
+
+        if(!response.ok()) {
+            return responseBody.error;
+        }
         return responseBody.conversation.message[1].content;
     }
 
