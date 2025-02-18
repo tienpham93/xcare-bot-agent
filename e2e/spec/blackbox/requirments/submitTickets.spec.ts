@@ -1,4 +1,4 @@
-import { test } from '../../fixtures/fixtureConfig';
+import { test } from '../../../fixtures/fixtureConfig';
 
 test('Submit tickets', async ({ apiFixture, customExpect }) => {
     const payload = {

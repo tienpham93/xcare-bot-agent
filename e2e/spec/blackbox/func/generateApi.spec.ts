@@ -1,4 +1,4 @@
-import { test, expect } from '../../fixtures/fixtureConfig';
+import { test, expect } from '../../../fixtures/fixtureConfig';
 
 test('Verify generate successfully with VALID Bearer token', async ({ rawApiFixture }) => {
     const payload = {
